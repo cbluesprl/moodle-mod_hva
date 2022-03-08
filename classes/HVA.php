@@ -32,7 +32,7 @@ class HVA
     private $timemodified;
 
     /**
-     * ARVR constructor.
+     * HVA constructor.
      *
      * @param $object
      * @throws dml_exception
@@ -46,7 +46,7 @@ class HVA
         $this->name = $object->name;
         $this->timecreated = $object->timecreated;
         $this->timemodified = $object->timemodified;
-        $this->cmid = $this->get_cmid_from_arvrid($this->id);
+        $this->cmid = $this->get_cmid_from_hvaid($this->id);
 
         $file = $this->get_file_from_cmid($this->cmid);
         if ($file !== null) {
@@ -84,35 +84,35 @@ class HVA
         return new HVA($o);
     }
 
-//    /**
-//     * @param $cmid
-//     * @return ARVR
-//     * @throws dml_exception
-//     */
-//    public static function get_from_scorm_cmid($cmid)
-//    {
-//        global $DB;
-//
-//        $instance = $DB->get_record_sql(
-//            "SELECT a.id
-//            FROM mdl_course_modules cm_s
-//            JOIN mdl_scorm s ON s.id = cm_s.instance
-//            JOIN mdl_course_modules cm_a ON cm_a.course = cm_s.course AND cm_a.module = (SELECT id FROM mdl_modules WHERE name = 'arvr')
-//            JOIN mdl_arvr a ON a.id = cm_a.instance
-//            WHERE cm_s.id = $cmid AND cm_a.deletioninprogress = 0 AND cm_s.module = (SELECT id FROM mdl_modules WHERE name = 'scorm')",
-//            null,
-//            MUST_EXIST
-//        );
-//
-//        return self::get($instance->id);
-//    }
+    /**
+     * @param $cmid
+     * @return HVA
+     * @throws dml_exception
+     */
+    public static function get_from_scorm_cmid($cmid)
+    {
+        global $DB;
+
+        $instance = $DB->get_record_sql(
+            "SELECT a.id
+            FROM mdl_course_modules cm_s
+            JOIN mdl_scorm s ON s.id = cm_s.instance
+            JOIN mdl_course_modules cm_a ON cm_a.course = cm_s.course AND cm_a.module = (SELECT id FROM mdl_modules WHERE name = 'hva')
+            JOIN mdl_hva a ON a.id = cm_a.instance
+            WHERE cm_s.id = $cmid AND cm_a.deletioninprogress = 0 AND cm_s.module = (SELECT id FROM mdl_modules WHERE name = 'scorm')",
+            null,
+            MUST_EXIST
+        );
+
+        return self::get($instance->id);
+    }
 
     /**
      * @param $hvaid
      * @return mixed
      * @throws dml_exception
      */
-    private function get_cmid_from_arvrid($hvaid)
+    private function get_cmid_from_hvaid($hvaid)
     {
         global $DB;
 
