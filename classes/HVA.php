@@ -72,7 +72,7 @@ class HVA
 
     /**
      * @param $id
-     * @return ARVR
+     * @return HVA
      * @throws dml_exception
      */
     public static function get($id)
@@ -143,11 +143,11 @@ class HVA
         $file_info = $DB->get_record_sql(
             "SELECT *
             FROM {files}
-            WHERE contextid = :contextid AND component = 'mod_arvr' AND itemid = '0' AND filepath = '/' AND filename != '.'",
+            WHERE contextid = :contextid AND component = 'mod_hva' AND itemid = '0' AND filepath = '/' AND filename != '.'",
             ['contextid' => $context->id]
         );
         if ($file_info !== false) {
-            return $fs->get_file($context->id, 'mod_arvr', 'metadatafile', 0, '/', $file_info->filename);
+            return $fs->get_file($context->id, 'mod_hva', 'metadatafile', 0, '/', $file_info->filename);
         } else {
             return null;
         }

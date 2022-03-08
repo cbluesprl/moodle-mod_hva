@@ -25,3 +25,6 @@
 $string['pluginname'] = 'Hyperfiction VR Activity';
 $string['hvaname'] = 'Nom';
 $string['zipfile'] = 'Fichier zip';
+$string['modulename'] = 'Hyperfiction VR Activity';
+$string['modulenameplural'] = 'HVA';
+$string['pincode_message'] = 'Code Pin : ';

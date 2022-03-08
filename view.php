@@ -24,7 +24,7 @@
 require_once __DIR__ . '/../../config.php';
 require_once $CFG->libdir . '/completionlib.php';
 require_once $CFG->dirroot . '/mod/hva/lib.php';
-require_once $CFG->dirroot . '/mod/hva/classes/Pin.php';
+require_once $CFG->dirroot . '/mod/hva/classes/pin.php';
 
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or
 $hid = optional_param('hid', 0, PARAM_INT);  // HVA ID.
@@ -54,9 +54,9 @@ echo $OUTPUT->header();
 if (is_object($hva) && isset($USER)) {
     try {
         $a = new StdClass();
-        $a->delay = (Pin::$duration / 60);
-        $a->pincode = Pin::generate($hva->id, $USER->id);
-        echo html_writer::tag('div', get_string('pincode_message', 'hva', $a), ['class' => 'alert alert-warning']);
+        $a->delay = (PinHva::$duration / 60);
+        $a->pincode = PinHva::generate($hva->id, $USER->id);
+        echo html_writer::tag('div', get_string('pincode_message', 'hva').$a->pincode, ['class' => 'alert alert-warning']);
     } catch (Exception $e) {
         echo $e->getMessage();
     }

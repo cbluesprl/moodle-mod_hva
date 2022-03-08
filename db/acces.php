@@ -24,12 +24,28 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
-    'block/admin_presets:addinstance' => array(
+$capabilities = [
+    'mod/hva:addinstance' => [
+        'riskbitmask' => RISK_XSS,
         'captype' => 'write',
-        'contextlevel' => CONTEXT_SYSTEM,
-        'archetypes' => array(
-            'manager' => CAP_ALLOW
-        )
-    )
-);
+        'contextlevel' => CONTEXT_COURSE,
+        'archetypes' => [
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+            'student' => CAP_ALLOW
+        ],
+        'clonepermissionsfrom' => 'moodle/course:manageactivities'
+    ],
+    'mod/hva:view' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => [
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+            'student' => CAP_ALLOW
+        ]
+    ]
+];
+

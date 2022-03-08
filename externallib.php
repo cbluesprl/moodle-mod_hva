@@ -23,36 +23,90 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-class mod_hva_external {
+class mod_hva_external extends external_api {
 
-    public function get_info($pin) {
-        //    - donne le zip,
-        //    - donne les info de l'utilisateur (nom/prénom)
-        //    - donne le statuts de l'activité ou le définir
-        //    - donne le tracking de l'utilisateur
+    private static $module;
 
+    protected static function get_module()
+    {
+        global $DB;
+        if (empty(self::$module)) {
+            self::$module = $DB->get_record('modules', ['name' => 'hva']);
+        }
+        return self::$module;
     }
+
 
     public static function get_info_parameters()  {
         return new external_function_parameters(
             array(
-                'pin' => new external_value(PARAM_INT,'Code pin')
+                'pincode' => new external_value(PARAM_INT,'Code pin')
             )
         );
     }
 
-    public function get_info_return() {
+    public static function get_info($pincode) {
+        global $CFG;
+        require_once __DIR__ . '/../../config.php';
+        require_once $CFG->dirroot . '/mod/hva/classes/PinHva.php';
+        require_once $CFG->dirroot . '/mod/hva/classes/HvaData.php';
+        require_once $CFG->dirroot . '/mod/hva/classes/ResponseManager.php';
+
+        $params = self::validate_parameters(self::get_info_parameters(), array('pincode' => $pincode));
+
+        //    - donne le zip,
+        //    - donne les info de l'utilisateur (nom/prénom)
+        //    - donne le statuts de l'activité ou le définir
+        //    - donne le tracking de l'utilisateur
+        //doit renvoyer les info user, le file, status scorm et tracking
+
+        if (!isset($params) || empty($params) || !PinHva::is_valid($params)) {
+            if (isset($object->error) || empty($object) || $object === false) {
+                if (!empty($object->error)) {
+                    $msg = "HTTP/1.0 " . $object->error;
+                } else {
+                    $msg = "HTTP/1.0 403";
+                }
+                header($msg);
+                if (isset($object->message)) {
+                    echo $object->message;
+                }
+            } else {
+                header("Content-Type: application/json");
+                echo json_encode($object);
+            }
+        }
+
+        $hvaData = HvaData::get_from_pin($params);
+        PinHva::update($pincode);
+
+        return $hvaData->output();
+
+    }
+
+    public function get_info_returns() {
+        return new external_multiple_structure(
+            new external_single_structure(
+                array(
+                    'studentId' => new external_value(PARAM_INT, 'name of user'),
+                    'studentName' => new external_value(PARAM_INT, 'name of user'),
+                    'activityTitle' => new external_value(PARAM_TEXT, 'multilang compatible name, course unique'),
+                    'LMSTracking' => new external_value(PARAM_RAW, 'status of activity'),
+                    'hyperfictionTracking' => new external_value(PARAM_FILE, 'zip file'),
+                )
+            )
+        );
         //describes return values => json
     }
 
-    public function update_tracking() {
+    public function save_tracking() {
         // récupère les infos de l'user
         // récupère le status de l'activité
         // récupère le tracking sous format json
         // update le status et le tracking de l'utilisateur
     }
 
-    public static function update_tracking_parameters() {
+    public static function save_tracking_parameters() {
         return new external_function_parameters(
             array(
                 //code pin parameter
@@ -60,7 +114,7 @@ class mod_hva_external {
         );
     }
 
-    public function update_tracking_return() {
+    public function save_tracking_return() {
         //describes return values => json
     }
 

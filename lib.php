@@ -37,7 +37,7 @@
  * @throws moodle_exception
  * @throws require_login_exception
  */
-function arvr_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = [])
+function hva_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = [])
 {
     require_login();
     if ($context->contextlevel != CONTEXT_SYSTEM) {
@@ -58,7 +58,7 @@ function arvr_pluginfile($course, $cm, $context, $filearea, $args, $forcedownloa
  * @return bool|int
  * @throws dml_exception
  */
-function arvr_add_instance($data)
+function hva_add_instance($data)
 {
     global $DB;
 
@@ -75,7 +75,7 @@ function arvr_add_instance($data)
 //        file_save_draft_area_files(
 //            $data->metadatafile,
 //            $context->id,
-//            'mod_arvr',
+//            'mod_hva',
 //            'metadatafile',
 //            0
 //        );
@@ -89,7 +89,7 @@ function arvr_add_instance($data)
  * @return bool
  * @throws dml_exception
  */
-function arvr_update_instance($data)
+function hva_update_instance($data)
 {
     global $DB;
 
@@ -99,13 +99,13 @@ function arvr_update_instance($data)
 
     $cm = $DB->get_record('course_modules', ['id' => $data->update]);
 
-    $arvr = $DB->get_record('arvr', ['id' => $cm->instance]);
+    $hva = $DB->get_record('hva', ['id' => $cm->instance]);
 
     $activity = new StdClass;
-    $activity->id = $arvr->id;
+    $activity->id = $hva->id;
     $activity->course = $data->course;
     $activity->name = $data->name;
-    $activity->timecreated = $arvr->timecreated;
+    $activity->timecreated = $hva->timecreated;
     $activity->timemodified = time();
     $DB->update_record('hva', $activity);
 
@@ -114,7 +114,7 @@ function arvr_update_instance($data)
 //        file_save_draft_area_files(
 //            $data->metadatafile,
 //            $context->id,
-//            'mod_arvr',
+//            'mod_hva',
 //            'metadatafile',
 //            0
 //        );
@@ -128,7 +128,7 @@ function arvr_update_instance($data)
  * @return bool
  * @throws dml_exception
  */
-function arvr_delete_instance($id)
+function hva_delete_instance($id)
 {
     global $DB;
 

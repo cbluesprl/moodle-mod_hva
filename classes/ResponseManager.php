@@ -21,10 +21,27 @@
  * @copyright   2022 CBlue (https://www.cblue.be/)
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'Hyperfiction VR Activity';
-$string['hvaname'] = 'Activity\'s name';
-$string['zipfile'] = 'Zip file';
-$string['modulename'] = 'Hyperfiction VR Activity';
-$string['modulenameplural'] = 'HVA';
-$string['pincode_message'] = 'Code Pin : ';
+class ResponseManagerHva
+{
+    /**
+     * @param $object
+     */
+    public static function send($object)
+    {
+        if (isset($object->error) || empty($object) || $object === false) {
+            if (!empty($object->error)) {
+                $msg = "HTTP/1.0 " . $object->error;
+            } else {
+                $msg = "HTTP/1.0 403";
+            }
+            header($msg);
+            if (isset($object->message)) {
+                echo $object->message;
+            }
+        } else {
+            header("Content-Type: application/json");
+            echo json_encode($object);
+        }
+        die;
+    }
+}

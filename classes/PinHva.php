@@ -24,7 +24,7 @@
 require_once __DIR__ . '/../../../config.php';
 require_once $CFG->dirroot . '/mod/hva/classes/HVA.php';
 
-class Pin
+class PinHva
 {
     public static $table = 'hva_pincode';
     public static $duration = 7200; // 2h
@@ -79,7 +79,7 @@ class Pin
 
         $record = $DB->get_record(self::$table, ['pincode' => $pin]);
 
-        return new Pin($record);
+        return new PinHva($record);
     }
 
     /**
