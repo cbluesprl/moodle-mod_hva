@@ -50,6 +50,17 @@ class mod_hva_mod_form extends moodleform_mod
 
         $mform->addElement('filemanager', 'zipfile', get_string('zipfile', 'hva'), null, $filemanageroptions);
 
+        // Metadata File upload.
+        $filemanageroptions = [];
+        $filemanageroptions['accepted_types'] = ['.json'];
+        $filemanageroptions['maxbytes'] = 0;
+        $filemanageroptions['maxfiles'] = 1;
+        $filemanageroptions['subdirs'] = 0;
+
+        $mform->addElement('filemanager', 'metadatafile', get_string('metadata', 'hva'), null, $filemanageroptions);
+        $mform->addHelpButton('metadatafile', 'metadata', 'arvr');
+
+
         $this->standard_coursemodule_elements();
 
         $this->apply_admin_defaults();

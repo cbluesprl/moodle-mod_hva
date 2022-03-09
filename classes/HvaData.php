@@ -49,14 +49,15 @@ class HvaData
         $this->user = $object->user;
         $this->LMSTracking = $object->LMSTracking;
         $this->id = $object->id;
-        var_dump($object);die();
+
         $file = $this->get_tracking_file($this->hva->cmid, $object->id);
 
-//        if (is_a($file, stored_file::class)) {
+        if (is_a($file, stored_file::class)) {
             $this->hyperfictionTracking = $file->get_content();
-//        } else {
-//            $this->hyperfictionTracking = new stdClass();
-//        }
+        } else {
+            $this->hyperfictionTracking = new stdClass();
+        }
+        $this->zipfile = [];
     }
 
     /**
@@ -232,6 +233,7 @@ class HvaData
         }
         $object->LMSTracking = new LMSTrackingHva($tracking->score, $tracking->completion);
         $object->id = $tracking->id;
+        $object->zipfile = [];
 
         return new HvaData($object);
     }
