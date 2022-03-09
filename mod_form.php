@@ -40,10 +40,21 @@ class mod_hva_mod_form extends moodleform_mod
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
 
-        $mform->addElement('filepicker', 'zipfile', get_string('zipfile','hva'), null, ['maxbytes' => "4000", 'accepted_types' => '.zip']);
+
+        // Zip File upload.
+        $filemanageroptions = [];
+        $filemanageroptions['accepted_types'] = ['.zip'];
+        $filemanageroptions['maxbytes'] = 4000;
+        $filemanageroptions['maxfiles'] = 1;
+        $filemanageroptions['subdirs'] = 0;
+
+        $mform->addElement('filemanager', 'zipfile', get_string('zipfile', 'hva'), null, $filemanageroptions);
 
         $this->standard_coursemodule_elements();
 
+        $this->apply_admin_defaults();
+
         $this->add_action_buttons();
+
     }
 }

@@ -25,10 +25,7 @@
 
 
 /**
- * @param $course
- * @param $cm
  * @param $context
- * @param $filearea
  * @param $args
  * @param $forcedownload
  * @param array $options
@@ -37,7 +34,7 @@
  * @throws moodle_exception
  * @throws require_login_exception
  */
-function hva_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = [])
+function hva_pluginfile($context, $args, $forcedownload, array $options = [])
 {
     require_login();
     if ($context->contextlevel != CONTEXT_SYSTEM) {
@@ -69,17 +66,17 @@ function hva_add_instance($data)
     $activity->timemodified = $activity->timecreated;
     $activity->id = $DB->insert_record('hva', $activity, true);
 
-//    if (isset($data->metadatafile)) {
-//        $cmid = $data->coursemodule;
-//        $context = context_module::instance($cmid);
-//        file_save_draft_area_files(
-//            $data->metadatafile,
-//            $context->id,
-//            'mod_hva',
-//            'metadatafile',
-//            0
-//        );
-//    }
+    if (isset($data->zipfile)) {
+        $cmid = $data->coursemodule;
+        $context = context_module::instance($cmid);
+        file_save_draft_area_files(
+            $data->zipfile,
+            $context->id,
+            'mod_hva',
+            'zipfile',
+            0
+        );
+    }
 
     return $activity->id;
 }
@@ -109,16 +106,16 @@ function hva_update_instance($data)
     $activity->timemodified = time();
     $DB->update_record('hva', $activity);
 
-//    if (isset($data->metadatafile)) {
-//        $context = context_module::instance($cm->id);
-//        file_save_draft_area_files(
-//            $data->metadatafile,
-//            $context->id,
-//            'mod_hva',
-//            'metadatafile',
-//            0
-//        );
-//    }
+    if (isset($data->zipfile)) {
+        $context = context_module::instance($cm->id);
+        file_save_draft_area_files(
+            $data->zipfile,
+            $context->id,
+            'mod_hva',
+            'zipfile',
+            0
+        );
+    }
 
     return true;
 }

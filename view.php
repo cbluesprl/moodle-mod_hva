@@ -24,7 +24,7 @@
 require_once __DIR__ . '/../../config.php';
 require_once $CFG->libdir . '/completionlib.php';
 require_once $CFG->dirroot . '/mod/hva/lib.php';
-require_once $CFG->dirroot . '/mod/hva/classes/pin.php';
+require_once $CFG->dirroot . '/mod/hva/classes/PinHva.php';
 
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or
 $hid = optional_param('hid', 0, PARAM_INT);  // HVA ID.

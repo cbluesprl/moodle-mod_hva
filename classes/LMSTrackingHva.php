@@ -26,7 +26,7 @@ require_once __DIR__ . '/../../../config.php';
 global $CFG;
 require_once $CFG->libdir . '/completionlib.php';
 
-class LMSTracking
+class LMSTrackingHva
 {
     private $score;
     private $completion;

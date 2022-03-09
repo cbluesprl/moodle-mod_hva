@@ -50,7 +50,6 @@ class mod_hva_external extends external_api {
         require_once __DIR__ . '/../../config.php';
         require_once $CFG->dirroot . '/mod/hva/classes/PinHva.php';
         require_once $CFG->dirroot . '/mod/hva/classes/HvaData.php';
-        require_once $CFG->dirroot . '/mod/hva/classes/ResponseManager.php';
 
         $params = self::validate_parameters(self::get_info_parameters(), array('pincode' => $pincode));
 
@@ -61,19 +60,14 @@ class mod_hva_external extends external_api {
         //doit renvoyer les info user, le file, status scorm et tracking
 
         if (!isset($params) || empty($params) || !PinHva::is_valid($params)) {
-            if (isset($object->error) || empty($object) || $object === false) {
-                if (!empty($object->error)) {
-                    $msg = "HTTP/1.0 " . $object->error;
-                } else {
-                    $msg = "HTTP/1.0 403";
-                }
-                header($msg);
-                if (isset($object->message)) {
-                    echo $object->message;
-                }
+            if (!empty($object->error)) {
+                $msg = "HTTP/1.0 " . $object->error;
             } else {
-                header("Content-Type: application/json");
-                echo json_encode($object);
+                $msg = "HTTP/1.0 403";
+            }
+            header($msg);
+            if (isset($object->message)) {
+                echo $object->message;
             }
         }
 

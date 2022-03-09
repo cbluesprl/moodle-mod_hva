@@ -45,7 +45,6 @@ class PinHva
     private function __construct($object)
     {
         global $DB;
-
         $this->id = $object->id;
         $this->pincode = $object->pincode;
         $this->hva = HVA::get($object->hvaid);
@@ -77,7 +76,7 @@ class PinHva
     {
         global $DB;
 
-        $record = $DB->get_record(self::$table, ['pincode' => $pin]);
+        $record = $DB->get_record(self::$table, ['pincode' => $pin['pincode']]);
 
         return new PinHva($record);
     }

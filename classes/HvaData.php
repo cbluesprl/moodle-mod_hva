@@ -22,6 +22,12 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+require_once __DIR__ . '/../../../config.php';
+global $CFG;
+require_once $CFG->dirroot . '/mod/hva/classes/PinHva.php';
+require_once $CFG->dirroot . '/mod/hva/classes/LMSTrackingHva.php';
+require_once $CFG->dirroot . '/mod/hva/classes/HVA.php';
+
 class HvaData
 {
     public static $table = 'hva_tracking';
@@ -43,13 +49,14 @@ class HvaData
         $this->user = $object->user;
         $this->LMSTracking = $object->LMSTracking;
         $this->id = $object->id;
-
+        var_dump($object);die();
         $file = $this->get_tracking_file($this->hva->cmid, $object->id);
-        if (is_a($file, stored_file::class)) {
-            $this->hyperfictionTracking = json_decode($file->get_content());
-        } else {
-            $this->hyperfictionTracking = new stdClass();
-        }
+
+//        if (is_a($file, stored_file::class)) {
+            $this->hyperfictionTracking = $file->get_content();
+//        } else {
+//            $this->hyperfictionTracking = new stdClass();
+//        }
     }
 
     /**
@@ -223,7 +230,7 @@ class HvaData
             $tracking->completion = 0;
             $tracking->id = null;
         }
-        $object->LMSTracking = new LMSTracking($tracking->score, $tracking->completion);
+        $object->LMSTracking = new LMSTrackingHva($tracking->score, $tracking->completion);
         $object->id = $tracking->id;
 
         return new HvaData($object);

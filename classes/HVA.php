@@ -49,6 +49,7 @@ class HVA
         $this->cmid = $this->get_cmid_from_hvaid($this->id);
 
         $file = $this->get_file_from_cmid($this->cmid);
+
         if ($file !== null) {
             $this->metadata = json_decode($file->get_content());
         } else {
@@ -147,7 +148,7 @@ class HVA
             ['contextid' => $context->id]
         );
         if ($file_info !== false) {
-            return $fs->get_file($context->id, 'mod_hva', 'metadatafile', 0, '/', $file_info->filename);
+            return $fs->get_file($context->id, 'mod_hva', 'zipfile', 0, '/', $file_info->filename);
         } else {
             return null;
         }
