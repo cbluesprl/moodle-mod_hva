@@ -66,6 +66,5 @@ class mod_hva_mod_form extends moodleform_mod
         $this->apply_admin_defaults();
 
         $this->add_action_buttons();
-
     }
 }

@@ -37,6 +37,7 @@ class HvaData
     private $user;
     private $LMSTracking;
     private $hyperfictionTracking;
+    private $zipfile;
 
     /**
      * HyperfictionData constructor.
@@ -55,9 +56,10 @@ class HvaData
         if (is_a($file, stored_file::class)) {
             $this->hyperfictionTracking = $file->get_content();
         } else {
-            $this->hyperfictionTracking = new stdClass();
+            $this->hyperfictionTracking = '';
         }
-        $this->zipfile = [];
+
+        $this->zipfile = base64_encode($this->get_zipfile_from_cmid($this->hva->cmid)->get_content());
     }
 
     /**
@@ -164,9 +166,11 @@ class HvaData
         $output->studentId = $this->user->id;
         $output->studentName = $this->user->firstname . ' ' . $this->user->lastname;
         $output->activityTitle = $this->hva->name;
-        $output->LMSTracking = $this->LMSTracking->output();
+        $output->LMSTracking = $this->LMSTracking;
         $output->hyperfictionInitialize = $this->hva->metadata;
         $output->hyperfictionTracking = $this->hyperfictionTracking;
+        $output->zipfile = $this->zipfile;
+
 
         return $output;
     }
@@ -231,9 +235,10 @@ class HvaData
             $tracking->completion = 0;
             $tracking->id = null;
         }
-        $object->LMSTracking = new LMSTrackingHva($tracking->score, $tracking->completion);
+        $object->LMSTracking = [
+            'score' => $tracking->score,
+            'completion' => $tracking->completion];
         $object->id = $tracking->id;
-        $object->zipfile = [];
 
         return new HvaData($object);
     }
@@ -322,6 +327,30 @@ class HvaData
         );
 
         return $file;
+    }
+
+    /**
+     * @param $cmid
+     * @return bool|stored_file|null
+     * @throws dml_exception
+     */
+    private function get_zipfile_from_cmid($cmid)
+    {
+        global $DB;
+
+        $fs = get_file_storage();
+        $context = context_module::instance($cmid);
+        $file_info = $DB->get_record_sql(
+            "SELECT *
+            FROM {files}
+            WHERE contextid = :contextid AND component = 'mod_hva' AND itemid = '1' AND filepath = '/' AND filename != '.'",
+            ['contextid' => $context->id]
+        );
+        if ($file_info !== false) {
+            return $fs->get_file($context->id, 'mod_hva', 'zipfile', 1, '/', $file_info->filename);
+        } else {
+            return null;
+        }
     }
 }
 

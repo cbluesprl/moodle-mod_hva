@@ -57,7 +57,9 @@ function hva_pluginfile($context, $args, $forcedownload, array $options = [])
  */
 function hva_add_instance($data)
 {
-    global $DB;
+    global $DB, $COURSE;
+
+    $course_id = context_course::instance($COURSE->id);
 
     $activity = new StdClass;
     $activity->course = $data->course;
@@ -65,6 +67,18 @@ function hva_add_instance($data)
     $activity->timecreated = time();
     $activity->timemodified = $activity->timecreated;
     $activity->id = $DB->insert_record('hva', $activity, true);
+
+    if (isset($data->metadata)) {
+        $cmid = $data->coursemodule;
+        $context = context_module::instance($cmid);
+        file_save_draft_area_files(
+            $data->metadata,
+            $context->id,
+            'mod_hva',
+            'metadata',
+            0
+        );
+    }
 
     if (isset($data->zipfile)) {
         $cmid = $data->coursemodule;
@@ -74,11 +88,40 @@ function hva_add_instance($data)
             $context->id,
             'mod_hva',
             'zipfile',
-            0
+            1
         );
     }
 
-    return $activity->id;
+
+
+/*    if (isset($data->zipfile)) {
+        $fs = get_file_storage();
+        $fileinfo = [
+            'contextid' => context_course::instance($COURSE->id),
+            'component' => 'mod_have' ,
+            'filearea' => 'zipfile',
+            'itemid' =>0,
+            'filepath' => '/',
+            'filename' => $course_id.'_file.zip'
+        ];
+
+        $file = $fs->get_file(
+            $fileinfo['contextid'],
+            $fileinfo['component'],
+            $fileinfo['filearea'],
+            $fileinfo['itemid'],
+            $fileinfo['filepath'],
+            $fileinfo['filename']
+        );
+        if ($file) {
+            $file->delete();
+        }
+        $fs->create_file_from_url($fileinfo, $data->image);
+        return true;
+    }*/
+
+
+return $activity->id;
 }
 
 /**
@@ -106,6 +149,17 @@ function hva_update_instance($data)
     $activity->timemodified = time();
     $DB->update_record('hva', $activity);
 
+    if (isset($data->metadata)) {
+        $context = context_module::instance($cm->id);
+        file_save_draft_area_files(
+            $data->metadata,
+            $context->id,
+            'mod_hva',
+            'metadata',
+            0
+        );
+    }
+
     if (isset($data->zipfile)) {
         $context = context_module::instance($cm->id);
         file_save_draft_area_files(
@@ -113,7 +167,7 @@ function hva_update_instance($data)
             $context->id,
             'mod_hva',
             'zipfile',
-            0
+            1
         );
     }
 
@@ -142,7 +196,6 @@ function hva_delete_instance($id)
 
     return true;
 }
-
 
 /**
  * @param int $id

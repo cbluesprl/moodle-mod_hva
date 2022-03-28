@@ -22,6 +22,7 @@
  */
 
 require_once('../../config.php');
+require_once $CFG->dirroot . '/local/hva/form.php';
 
 $id = required_param('id', PARAM_INT);           // Course ID
 
@@ -29,3 +30,4 @@ $id = required_param('id', PARAM_INT);           // Course ID
 if (!$course = $DB->get_record('course', array('id'=> $id))) {
     print_error('Course ID is incorrect');
 }
+

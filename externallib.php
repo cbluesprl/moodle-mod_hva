@@ -57,7 +57,6 @@ class mod_hva_external extends external_api {
         //    - donne les info de l'utilisateur (nom/prénom)
         //    - donne le statuts de l'activité ou le définir
         //    - donne le tracking de l'utilisateur
-        //doit renvoyer les info user, le file, status scorm et tracking
 
         if (!isset($params) || empty($params) || !PinHva::is_valid($params)) {
             if (!empty($object->error)) {
@@ -79,37 +78,65 @@ class mod_hva_external extends external_api {
     }
 
     public function get_info_returns() {
-        return new external_multiple_structure(
-            new external_single_structure(
-                array(
-                    'studentId' => new external_value(PARAM_INT, 'name of user'),
-                    'studentName' => new external_value(PARAM_INT, 'name of user'),
-                    'activityTitle' => new external_value(PARAM_TEXT, 'multilang compatible name, course unique'),
-                    'LMSTracking' => new external_value(PARAM_RAW, 'status of activity'),
-                    'hyperfictionTracking' => new external_value(PARAM_FILE, 'zip file'),
-                )
-            )
-        );
+        return new external_single_structure(
+            array(
+                'studentId' => new external_value(PARAM_INT, 'name of user'),
+                'studentName' => new external_value(PARAM_TEXT, 'name of user'),
+                'activityTitle' => new external_value(PARAM_TEXT, 'multilang compatible name, course unique'),
+                'LMSTracking' => new external_single_structure(
+                    array(
+                        'score' => new external_value(PARAM_INT,'score of activity'),
+                        'completion' => new external_value(PARAM_TEXT,'completion of activity')
+                    )
+                ),
+                'hyperfictionTracking' => new external_value(PARAM_RAW, 'metadata'),
+                'zipfile' => new external_value(PARAM_TEXT, 'base64'),
+            ));
         //describes return values => json
     }
 
-    public function save_tracking() {
-        // récupère les infos de l'user
-        // récupère le status de l'activité
-        // récupère le tracking sous format json
-        // update le status et le tracking de l'utilisateur
-    }
 
-    public static function save_tracking_parameters() {
+    public static function save_data_parameters() {
         return new external_function_parameters(
             array(
-                //code pin parameter
+                'pincode' => new external_value(PARAM_INT,'Code pin'),
+                'LMSTracking' => new external_single_structure(
+                    array(
+                        'score' => new external_value(PARAM_INT,'score of activity'),
+                        'completion' => new external_value(PARAM_TEXT,'completion of activity')
+                    )
+                ),
+                'hyperfictionTracking' => new external_external_value(PARAM_RAW,'save of user')
             )
         );
     }
 
-    public function save_tracking_return() {
-        //describes return values => json
+    public function save_data() {
+        global $CFG;
+        require_once __DIR__ . '/../../config.php';
+        require_once $CFG->dirroot . '/mod/hva/classes/PinHva.php';
+        require_once $CFG->dirroot . '/mod/hva/classes/HvaData.php';
+
+        $params = self::validate_parameters(self::get_data_parameters(), array('pincode' => $pincode, 'LMSTracking' => $LMSTracking, 'hyperfictionTracking' => $hyperfictionTracking));
+        // récup le pincode
+        // save les infos de l'user
+        // save le status de l'activité
+        // save le tracking sous format json
+        try {
+            $infos = new stdClass();
+            $infos->LMSTracking = $LMSTracking;
+            $infos->hyperficitonTracking = $hyperfictionTracking;
+
+            $hyperfictionData = HyperfictionData::get_from_pin($pincode);
+            Pin::update($pincode);
+            $hyperfictionData->update_tracking($infos);
+        } catch (Exception $e) {
+            ResponseManager::send(false);
+        }
+    }
+
+    public function save_data_return() {
+        return 'save passed';
     }
 
 }
