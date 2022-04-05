@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -14,7 +13,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
  * @package     mod_hva
  * @author      Loïc Hannecart <lhannecart@cblue.be>
@@ -32,12 +30,21 @@ $functions = array(
         'type'        => 'read',                  //database rights of the web service function (read, write)
         'ajax' => true,        // is the service available to 'internal' ajax calls.
     ),
-    'mod_hva_update_tracking' => array(         //web service function name
+    'mod_hva_save_data' => array(         //web service function name
         'classname'   => 'mod_hva_external',  //class containing the external function OR namespaced class in classes/external/XXXX.php
-        'methodname'  => 'get_tracking',          //external function name
+        'methodname'  => 'save_data',          //external function name
         'classpath'   => 'mod/hva/externallib.php',  //file containing the class/external function - not required if using namespaced auto-loading classes.
         // defaults to the service's externalib.php
         'description' => 'Save tracking of user.',    //human readable description of the web service function
+        'type'        => 'write',                  //database rights of the web service function (read, write)
+        'ajax' => true,        // is the service available to 'internal' ajax calls.
+    ),
+    'mod_hva_get_zip' => array(         //web service function name
+        'classname'   => 'mod_hva_external',  //class containing the external function OR namespaced class in classes/external/XXXX.php
+        'methodname'  => 'get_zip',          //external function name
+        'classpath'   => 'mod/hva/externallib.php',  //file containing the class/external function - not required if using namespaced auto-loading classes.
+        // defaults to the service's externalib.php
+        'description' => 'Download zip file.',    //human readable description of the web service function
         'type'        => 'write',                  //database rights of the web service function (read, write)
         'ajax' => true,        // is the service available to 'internal' ajax calls.
     )

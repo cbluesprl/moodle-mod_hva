@@ -20,7 +20,6 @@
  * @copyright   2022 CBlue (https://www.cblue.be/)
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class HVA
 {
     public static $table = 'hva';
@@ -49,21 +48,18 @@ class HVA
         $this->cmid = $this->get_cmid_from_hvaid($this->id);
 
         $metadata = $this->get_file_from_cmid($this->cmid);
-        $zipfile = $this->get_zipfile_from_cmid($this->cmid);
+        //$zipfile = $this->get_zipfile_from_cmid($this->cmid);
 
         if ($metadata !== null) {
             $this->metadata = json_decode($metadata->get_content());
         } else {
             $this->metadata = '';
         }
-
-        if ($zipfile != null) {
-            $this->zipfile = $zipfile->get_content();
-        } else {
-            $this->zipfile = '';
-        }
-
-
+        /*        if ($zipfile != null) {
+                    $this->zipfile = $zipfile->get_content();
+                } else {
+                    $this->zipfile = '';
+                }*/
     }
 
     /**
@@ -122,7 +118,7 @@ class HVA
      * @return mixed
      * @throws dml_exception
      */
-    private function get_cmid_from_hvaid($hvaid)
+    static function get_cmid_from_hvaid($hvaid)
     {
         global $DB;
 
@@ -162,28 +158,30 @@ class HVA
             return null;
         }
     }
+
+
     /**
      * @param $cmid
      * @return bool|stored_file|null
      * @throws dml_exception
      */
-    private function get_zipfile_from_cmid($cmid)
-    {
-        global $DB;
+    /*    private function get_zipfile_from_cmid($cmid)
+        {
+            global $DB;
 
-        $fs = get_file_storage();
-        $context = context_module::instance($cmid);
-        $file_info = $DB->get_record_sql(
-            "SELECT *
-            FROM {files}
-            WHERE contextid = :contextid AND component = 'mod_hva' AND itemid = '1' AND filepath = '/' AND filename != '.'",
-            ['contextid' => $context->id]
-        );
-        if ($file_info !== false) {
-            return $fs->get_file($context->id, 'mod_hva', 'zipfile', 0, '/', $file_info->filename);
-        } else {
-            return null;
-        }
-    }
+            $fs = get_file_storage();
+            $context = context_module::instance($cmid);
+            $file_info = $DB->get_record_sql(
+                "SELECT *
+                FROM {files}
+                WHERE contextid = :contextid AND component = 'mod_hva' AND itemid = '1' AND filepath = '/' AND filename != '.'",
+                ['contextid' => $context->id]
+            );
+            if ($file_info !== false) {
+                return $fs->get_file($context->id, 'mod_hva', 'zipfile', 0, '/', $file_info->filename);
+            } else {
+                return null;
+            }
+        }*/
 
 }

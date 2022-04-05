@@ -114,6 +114,7 @@ class PinHva
     {
         global $DB;
 
+
         $o = $DB->get_record(self::$table, ['pincode' => $pin], '*', MUST_EXIST);
         $o->timemodified = time();
 

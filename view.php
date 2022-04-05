@@ -62,4 +62,6 @@ if (is_object($hva) && isset($USER)) {
     }
 }
 
+//echo html_writer::tag('button',)
+
 echo $OUTPUT->footer();

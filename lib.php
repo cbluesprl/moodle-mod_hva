@@ -34,21 +34,51 @@
  * @throws moodle_exception
  * @throws require_login_exception
  */
-function hva_pluginfile($context, $args, $forcedownload, array $options = [])
+function hva_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array())
 {
-    require_login();
-    if ($context->contextlevel != CONTEXT_SYSTEM) {
-        return false;
-    }
-    $fs = get_file_storage();
-    $relativepath = implode('/', $args);
-    $fullpath = "/$context->id/mod_hva/files/" . $relativepath;
-    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+    // Check the contextlevel is as expected - if your plugin is a block, this becomes CONTEXT_BLOCK, etc.
+    if ($context->contextlevel != CONTEXT_MODULE) {
         return false;
     }
 
-    return send_stored_file($file, 0, 0, $forcedownload, $options);
+    // Make sure the filearea is one of those used by the plugin.
+    if ($filearea !== 'zipfile' && $filearea !== 'metadata') {
+        return false;
+    }
+
+    // Make sure the user is logged in and has access to the module (plugins that are not course modules should leave out the 'cm' part).
+    require_login($course, true, $cm);
+
+    // Check the relevant capabilities - these may vary depending on the filearea being accessed.
+    if (!has_capability('mod/hva:view', $context)) {
+        return false;
+    }
+
+    // Leave this line out if you set the itemid to null in make_pluginfile_url (set $itemid to 0 instead).
+    $itemid = array_shift($args); // The first item in the $args array.
+
+    // Use the itemid to retrieve any relevant data records and perform any security checks to see if the
+    // user really does have access to the file in question.
+
+    // Extract the filename / filepath from the $args array.
+    $filename = array_pop($args); // The last item in the $args array.
+    if (!$args) {
+        $filepath = '/'; // $args is empty => the path is '/'
+    } else {
+        $filepath = '/'.implode('/', $args).'/'; // $args contains elements of the filepath
+    }
+
+    // Retrieve the file from the Files API.
+    $fs = get_file_storage();
+    $file = $fs->get_file($context->id, 'mod_hva', $filearea, $itemid, $filepath, $filename);
+    if (!$file) {
+        return false; // The file does not exist.
+    }
+
+    // We can now send the file back to the browser - in this case with a cache lifetime of 1 day and no filtering.
+    send_stored_file($file, 86400, 0, $forcedownload, $options);
 }
+
 
 /**
  * @param object $data
@@ -91,35 +121,6 @@ function hva_add_instance($data)
             1
         );
     }
-
-
-
-/*    if (isset($data->zipfile)) {
-        $fs = get_file_storage();
-        $fileinfo = [
-            'contextid' => context_course::instance($COURSE->id),
-            'component' => 'mod_have' ,
-            'filearea' => 'zipfile',
-            'itemid' =>0,
-            'filepath' => '/',
-            'filename' => $course_id.'_file.zip'
-        ];
-
-        $file = $fs->get_file(
-            $fileinfo['contextid'],
-            $fileinfo['component'],
-            $fileinfo['filearea'],
-            $fileinfo['itemid'],
-            $fileinfo['filepath'],
-            $fileinfo['filename']
-        );
-        if ($file) {
-            $file->delete();
-        }
-        $fs->create_file_from_url($fileinfo, $data->image);
-        return true;
-    }*/
-
 
 return $activity->id;
 }

@@ -1,6 +1,4 @@
 <?php
-
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,7 +13,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
  * @package     mod_hva
  * @author      Loïc Hannecart <lhannecart@cblue.be>
@@ -36,7 +33,6 @@ class mod_hva_external extends external_api {
         return self::$module;
     }
 
-
     public static function get_info_parameters()  {
         return new external_function_parameters(
             array(
@@ -52,8 +48,6 @@ class mod_hva_external extends external_api {
         require_once $CFG->dirroot . '/mod/hva/classes/HvaData.php';
 
         $params = self::validate_parameters(self::get_info_parameters(), array('pincode' => $pincode));
-
-        //    - donne le zip,
         //    - donne les info de l'utilisateur (nom/prénom)
         //    - donne le statuts de l'activité ou le définir
         //    - donne le tracking de l'utilisateur
@@ -77,7 +71,7 @@ class mod_hva_external extends external_api {
 
     }
 
-    public function get_info_returns() {
+    public static function get_info_returns() {
         return new external_single_structure(
             array(
                 'studentId' => new external_value(PARAM_INT, 'name of user'),
@@ -90,9 +84,49 @@ class mod_hva_external extends external_api {
                     )
                 ),
                 'hyperfictionTracking' => new external_value(PARAM_RAW, 'metadata'),
-                'zipfile' => new external_value(PARAM_TEXT, 'base64'),
+                //'zipfile' => new external_value(PARAM_TEXT, 'base64'),
             ));
         //describes return values => json
+    }
+
+    public static function get_zip_parameters() {
+        return new external_function_parameters(
+            array(
+                'pincode' => new external_value(PARAM_INT,'Code pin')
+            )
+        );
+    }
+
+    public static function get_zip($pincode) {
+        //give link to dl the zipµ
+        global $CFG;
+        require_once __DIR__ . '/../../config.php';
+        require_once $CFG->dirroot . '/mod/hva/classes/PinHva.php';
+        require_once $CFG->dirroot . '/mod/hva/classes/HvaData.php';
+        require_once $CFG->dirroot . '/mod/hva/classes/Zipfile.php';
+
+        $params = self::validate_parameters(self::get_zip_parameters(), array('pincode' => $pincode));
+
+        if (!isset($params) || empty($params) || !PinHva::is_valid($params)) {
+            if (!empty($object->error)) {
+                $msg = "HTTP/1.0 " . $object->error;
+            } else {
+                $msg = "HTTP/1.0 403";
+            }
+            header($msg);
+            if (isset($object->message)) {
+                echo $object->message;
+            }
+        }
+
+        return Zipfile::get_zipfile_from_pincode($params);
+    }
+
+    public static function get_zip_returns() {
+        return new external_single_structure(
+            array(
+                'url' => new external_value(PARAM_URL,'link for download the zip file')
+            ));
     }
 
 
@@ -106,37 +140,42 @@ class mod_hva_external extends external_api {
                         'completion' => new external_value(PARAM_TEXT,'completion of activity')
                     )
                 ),
-                'hyperfictionTracking' => new external_external_value(PARAM_RAW,'save of user')
+                'hyperfictionTracking' => new external_value(PARAM_RAW,'save of user')
             )
         );
     }
 
-    public function save_data() {
+    public static function save_data($pincode, $LMSTracking, $hyperfictionTracking) {
         global $CFG;
         require_once __DIR__ . '/../../config.php';
         require_once $CFG->dirroot . '/mod/hva/classes/PinHva.php';
         require_once $CFG->dirroot . '/mod/hva/classes/HvaData.php';
 
-        $params = self::validate_parameters(self::get_data_parameters(), array('pincode' => $pincode, 'LMSTracking' => $LMSTracking, 'hyperfictionTracking' => $hyperfictionTracking));
-        // récup le pincode
-        // save les infos de l'user
-        // save le status de l'activité
-        // save le tracking sous format json
+        $hyper = json_decode($hyperfictionTracking);
+
+        $params = self::validate_parameters(self::save_data_parameters(), array('pincode' => $pincode, 'LMSTracking' => $LMSTracking, 'hyperfictionTracking' => $hyper));
+        $message = new stdClass();
+
         try {
             $infos = new stdClass();
-            $infos->LMSTracking = $LMSTracking;
-            $infos->hyperficitonTracking = $hyperfictionTracking;
+            $infos->LMSTracking = $params['LMSTracking'];
+            $infos->hyperficitonTracking = $params['hyperfictionTracking'];
 
-            $hyperfictionData = HyperfictionData::get_from_pin($pincode);
-            Pin::update($pincode);
-            $hyperfictionData->update_tracking($infos);
+            $hvaData = HvaData::get_from_pin($params);
+            PinHva::update($params['pincode']);
+            $hvaData->update_tracking($infos);
+            $message->status = "save succeeded";
+            return $message;
         } catch (Exception $e) {
-            ResponseManager::send(false);
+            $message->status = $e->getMessage();
+            return $message;
         }
     }
 
-    public function save_data_return() {
-        return 'save passed';
+    public static function save_data_returns() {
+        return new external_single_structure(
+            array(
+                'status' => new external_value(PARAM_TEXT,'status of this wb')
+            ));
     }
-
 }

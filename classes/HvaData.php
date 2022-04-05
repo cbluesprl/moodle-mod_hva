@@ -37,7 +37,7 @@ class HvaData
     private $user;
     private $LMSTracking;
     private $hyperfictionTracking;
-    private $zipfile;
+    //private $zipfile;
 
     /**
      * HyperfictionData constructor.
@@ -58,7 +58,6 @@ class HvaData
         } else {
             $this->hyperfictionTracking = '';
         }
-
         $this->zipfile = base64_encode($this->get_zipfile_from_cmid($this->hva->cmid)->get_content());
     }
 
@@ -96,12 +95,14 @@ class HvaData
     {
         global $DB;
 
-        $score = isset($infos->LMSTracking->score) ? $infos->LMSTracking->score : $this->LMSTracking->score;
-        $completion = isset($infos->LMSTracking->completion) ? $infos->LMSTracking->completion : $this->LMSTracking->completion;
+        $score = isset($infos->LMSTracking['score']) ? $infos->LMSTracking['score']: $this->LMSTracking->score;
+        $completion = isset($infos->LMSTracking['completion']) ? $infos->LMSTracking['completion'] : $this->LMSTracking->completion;
         $tracking_file = isset($infos->hyperfictionTracking) ? $infos->hyperfictionTracking : $this->hyperfictionTracking;
 
+
+
         // first manage the database tracking
-        $tracking = new LMSTracking($score, $completion);
+        $tracking = new LMSTrackingHva($score, $completion);
         $o = new stdClass();
         $o->hvaid = $this->hva->id;
         $o->userid = $this->user->id;
@@ -185,6 +186,7 @@ class HvaData
     public static function get_from_pin($pincode)
     {
         $pin = PinHva::get_from_pin($pincode);
+
 
         return self::get_from_user_and_hva($pin->user, $pin->hva);
     }
