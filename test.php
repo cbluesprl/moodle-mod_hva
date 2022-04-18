@@ -39,29 +39,48 @@ $PAGE->set_context($context);
 $PAGE->set_heading('Curl test');
 $PAGE->set_url("/mod/hva/test.php");
 
+$r = $DB->get_record_sql(
+    "SELECT et.token
+            FROM mdl_external_tokens et
+            JOIN mdl_external_services es ON es.id = et.externalserviceid AND es.name = 'hva'
+            "
+);
+
 echo $OUTPUT->header();
 $form = new mod_hva_form($url);
-if ($form->is_cancelled()) {
-    redirect($url);
-} elseif ($data = $form->get_data()) {
-    if (isset($data->web_service)) {
-        if ($data->web_service === 'get_info') {
-            $resp = curl_get_info($data->pincode, $data->token);
-            var_dump($resp);die;
-        }
-        if ($data->web_service === 'get_zip') {
-            $resp = curl_get_zip($data->pincode, $data->token);
-            var_dump($resp);die;
-        }
-        if ($data->web_service === 'save_data') {
-            $resp = curl_save_data($data->pincode, $data->score,$data->completion,$data->hyperfictionTracking, $data->token);
-            var_dump($resp);die;
+
+if (!isset($r)) {
+    echo html_writer::tag('div', get_string('tokennoset', 'hva'), ['class' => 'alert alert-warning']);
+} else {
+    $form->display();
+    if ($form->is_cancelled()) {
+        redirect($url);
+    } elseif ($data = $form->get_data()) {
+        if (isset($data->web_service)) {
+            if ($data->web_service === 'get_info') {
+                $resp = curl_get_info($data->pincode, $r->token);
+                //enlever '/'
+                echo html_writer::tag('div', get_string('result', 'mod_hva'), ['class' => 'alert alert-success']);
+                echo html_writer::tag('div', get_string('studentName', 'mod_hva') . $resp->studentName, ['class' => 'alert alert-success']);
+                echo html_writer::tag('div', get_string('activityTitle', 'mod_hva') . $resp->activityTitle, ['class' => 'alert alert-success']);
+                echo html_writer::tag('div', get_string('score', 'mod_hva') . $resp->LMSTracking->score, ['class' => 'alert alert-success']);
+                echo html_writer::tag('div', get_string('completion', 'mod_hva') . $resp->LMSTracking->completion, ['class' => 'alert alert-success']);
+                echo html_writer::tag('div', get_string('hyperfictionTracking', 'mod_hva') . $resp->hyperfictionTracking, ['class' => 'alert alert-success']);
+            }
+            if ($data->web_service === 'get_zip') {
+                $resp = curl_get_zip($data->pincode, $r->token);
+                echo html_writer::tag('div', get_string('result', 'mod_hva'), ['class' => 'alert alert-success']);
+                echo html_writer::start_tag('button', ['class' => 'btn btn-link']);
+                echo html_writer::tag('a', $resp->url, ['href' => $resp->url]);
+                echo html_writer::end_tag('button');
+            }
+            if ($data->web_service === 'save_data') {
+                $resp = json_encode(curl_save_data($data->pincode, $data->score, $data->completion, $data->hyperfictionTracking, $r->token));
+                echo html_writer::tag('div', get_string('savedone', 'mod_hva'), ['class' => 'alert alert-warning']);
+            }
         }
     }
 }
-
-$form->display();
-
 
 echo $OUTPUT->footer();
 

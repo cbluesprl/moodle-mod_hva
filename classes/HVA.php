@@ -51,6 +51,8 @@ class HVA
         //$zipfile = $this->get_zipfile_from_cmid($this->cmid);
 
         if ($metadata !== null) {
+            var_dump($metadata);
+            die;
             $this->metadata = json_decode($metadata->get_content());
         } else {
             $this->metadata = '';
@@ -126,7 +128,6 @@ class HVA
             "SELECT cm.id as cmid
             FROM mdl_course_modules cm
             JOIN mdl_modules m ON m.id = cm.module AND m.name = 'hva'
-            JOIN mdl_course c ON c.id = cm.course
             JOIN mdl_hva a ON a.id = cm.instance
             WHERE a.id = :hvaid",
             ['hvaid' => $hvaid]

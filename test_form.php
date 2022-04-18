@@ -20,7 +20,6 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
 defined('MOODLE_INTERNAL') || die();
 global $CFG, $PAGE;
 require_once $CFG->libdir . '/formslib.php';
@@ -31,19 +30,16 @@ class mod_hva_form extends moodleform
     {
         $mform =& $this->_form;
 
-        $mform->addElement('text', 'token', get_string('token', 'mod_hva'));
-        $mform->setType('token', PARAM_TEXT);
-
-        $mform->addElement('text', 'pincode', get_string('pincode_message', 'mod_hva'));
+        $mform->addElement('text', 'pincode', get_string('pincode', 'mod_hva'));
         $mform->setType('pincode', PARAM_INT);
 
-        $mform->addElement('text','score',get_string('score', 'mod_hva'));
+        $mform->addElement('text', 'score', get_string('score', 'mod_hva'));
         $mform->setType('score', PARAM_INT);
 
-        $mform->addElement('text','completion',get_string('completion', 'mod_hva'));
+        $mform->addElement('text', 'completion', get_string('completion', 'mod_hva'));
         $mform->setType('completion', PARAM_TEXT);
 
-        $mform->addElement('text','hyperfictionTracking',get_string('hyperfictionTracking', 'mod_hva'));
+        $mform->addElement('text', 'hyperfictionTracking', get_string('hyperfictionTracking', 'mod_hva'));
         $mform->setType('hyperfictionTracking', PARAM_TEXT);
 
         $options = [
@@ -53,6 +49,6 @@ class mod_hva_form extends moodleform
         ];
         $mform->addElement('select', 'web_service', get_string('webservice', 'mod_hva'), $options);
 
-        $this->add_action_buttons(null,'test');
+        $this->add_action_buttons(null, 'test');
     }
 }

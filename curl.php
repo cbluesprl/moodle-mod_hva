@@ -20,35 +20,46 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
-
-function curl_get_info($pincode, $token){
+/**
+ * curl for test get_info webservice
+ *
+ * @param $pincode
+ * @param $token
+ * @return mixed|string
+ */
+function curl_get_info($pincode, $token)
+{
     global $USER;
     $curl = new curl();
-    $url = 'http://grtgaz.local73/webservice/rest/server.php?wstoken='.$token.'&wsfunction=mod_hva_get_info&moodlewsrestformat=json';
-    $params = 'pincode='.$pincode;
-    $url .= '&'. $params;
-    $resp = $curl->get($url);
-
+    $url = 'http://grtgaz.local73/webservice/rest/server.php?wstoken=' . $token . '&wsfunction=mod_hva_get_info&moodlewsrestformat=json';
+    $params = 'pincode=' . $pincode;
+    $url .= '&' . $params;
+    $resp = json_decode($curl->get($url));
 
     if (!empty($resp)) {
-        $data = json_decode($resp);
-        if (!empty($data)) {
-            return $data;
-        } else {
-            return 'data empty';
+        if (isset($resp->errorcode)) {
+            return 'test';
         }
+        return $resp;
+    } else {
+        return 'data empty';
     }
-
-    return 'error';
 }
 
-function curl_get_zip($pincode, $token){
+/**
+ * curl for test get_zip webservice and return only the url
+ *
+ * @param $pincode
+ * @param $token
+ * @return bool|string
+ */
+function curl_get_zip($pincode, $token)
+{
     $curl = new curl();
-    $url ='http://grtgaz.local73/webservice/rest/server.php?wstoken='.$token.'&wsfunction=mod_hva_get_zip&moodlewsrestformat=json';
-    $params = 'pincode='.$pincode;
-    $url .= '&'. $params;
-    $resp = $curl->get($url);
+    $url = 'http://grtgaz.local73/webservice/rest/server.php?wstoken=' . $token . '&wsfunction=mod_hva_get_zip&moodlewsrestformat=json';
+    $params = 'pincode=' . $pincode;
+    $url .= '&' . $params;
+    $resp = json_decode($curl->get($url));
 
     if (!empty($resp)) {
         return $resp;
@@ -59,12 +70,23 @@ function curl_get_zip($pincode, $token){
     return 'error web service';
 }
 
-
-
-function curl_save_data($pincode, $score,$completion,$hyperfictionTracking, $token){
+/**
+ * curl for test the save_data webservice and return only a string
+ * that confirm if the wb work or not. Call curl get_info for check if
+ * the new data has been correctly save
+ *
+ * @param $pincode
+ * @param $score
+ * @param $completion
+ * @param $hyperfictionTracking
+ * @param $token
+ * @return mixed|string
+ */
+function curl_save_data($pincode, $score, $completion, $hyperfictionTracking, $token)
+{
     $curl = new curl();
-    $url = 'http://grtgaz.local73/webservice/rest/server.php?wstoken='.$token.'&wsfunction=mod_hva_save_data&moodlewsrestformat=json';
-    $LMSTracking =[
+    $url = 'http://grtgaz.local73/webservice/rest/server.php?wstoken=' . $token . '&wsfunction=mod_hva_save_data&moodlewsrestformat=json';
+    $LMSTracking = [
         'score' => $score,
         'completion' => $completion
     ];

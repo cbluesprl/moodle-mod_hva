@@ -58,7 +58,7 @@ class HvaData
         } else {
             $this->hyperfictionTracking = '';
         }
-        $this->zipfile = base64_encode($this->get_zipfile_from_cmid($this->hva->cmid)->get_content());
+        //$this->zipfile = base64_encode($this->get_zipfile_from_cmid($this->hva->cmid)->get_content());
     }
 
     /**
@@ -98,8 +98,6 @@ class HvaData
         $score = isset($infos->LMSTracking['score']) ? $infos->LMSTracking['score']: $this->LMSTracking->score;
         $completion = isset($infos->LMSTracking['completion']) ? $infos->LMSTracking['completion'] : $this->LMSTracking->completion;
         $tracking_file = isset($infos->hyperfictionTracking) ? $infos->hyperfictionTracking : $this->hyperfictionTracking;
-
-
 
         // first manage the database tracking
         $tracking = new LMSTrackingHva($score, $completion);
@@ -149,8 +147,9 @@ class HvaData
             'filename' => 'hva-tracking-' . $o->id . '.json'
         ];
 
+
         // then we create a new one with the given content
-        $fs->create_file_from_string($fileinfo, json_encode($tracking_file));
+        $fs->create_file_from_string($fileinfo, $tracking_file);
     }
 
     /**
@@ -170,7 +169,7 @@ class HvaData
         $output->LMSTracking = $this->LMSTracking;
         $output->hyperfictionInitialize = $this->hva->metadata;
         $output->hyperfictionTracking = $this->hyperfictionTracking;
-        $output->zipfile = $this->zipfile;
+        //$output->zipfile = $this->zipfile;
 
 
         return $output;
@@ -186,7 +185,6 @@ class HvaData
     public static function get_from_pin($pincode)
     {
         $pin = PinHva::get_from_pin($pincode);
-
 
         return self::get_from_user_and_hva($pin->user, $pin->hva);
     }

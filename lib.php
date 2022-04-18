@@ -14,15 +14,12 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
  * @package     mod_hva
  * @author      Loïc Hannecart <lhannecart@cblue.be>
  * @copyright   2022 CBlue (https://www.cblue.be/)
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-
 
 /**
  * @param $context
@@ -34,7 +31,7 @@
  * @throws moodle_exception
  * @throws require_login_exception
  */
-function hva_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array())
+function mod_hva_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = [])
 {
     // Check the contextlevel is as expected - if your plugin is a block, this becomes CONTEXT_BLOCK, etc.
     if ($context->contextlevel != CONTEXT_MODULE) {
@@ -50,9 +47,11 @@ function hva_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
     require_login($course, true, $cm);
 
     // Check the relevant capabilities - these may vary depending on the filearea being accessed.
-    if (!has_capability('mod/hva:view', $context)) {
-        return false;
-    }
+    //todo:ask if this is must have
+
+    /*    if (!has_capability('mod/hva:view', $context)) {
+            return false;
+        }*/
 
     // Leave this line out if you set the itemid to null in make_pluginfile_url (set $itemid to 0 instead).
     $itemid = array_shift($args); // The first item in the $args array.
@@ -65,7 +64,7 @@ function hva_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
     if (!$args) {
         $filepath = '/'; // $args is empty => the path is '/'
     } else {
-        $filepath = '/'.implode('/', $args).'/'; // $args contains elements of the filepath
+        $filepath = '/' . implode('/', $args) . '/'; // $args contains elements of the filepath
     }
 
     // Retrieve the file from the Files API.
@@ -78,7 +77,6 @@ function hva_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload
     // We can now send the file back to the browser - in this case with a cache lifetime of 1 day and no filtering.
     send_stored_file($file, 86400, 0, $forcedownload, $options);
 }
-
 
 /**
  * @param object $data
@@ -97,10 +95,11 @@ function hva_add_instance($data)
     $activity->timecreated = time();
     $activity->timemodified = $activity->timecreated;
     $activity->id = $DB->insert_record('hva', $activity, true);
-
+    //var_dump($data);die;
+//TODO : dump data pour s'assurer que le cmid est le bon (coursemodule ??)
     if (isset($data->metadata)) {
         $cmid = $data->coursemodule;
-        $context = context_module::instance($cmid);
+        $context = context_module::instance(40);
         file_save_draft_area_files(
             $data->metadata,
             $context->id,
@@ -122,7 +121,7 @@ function hva_add_instance($data)
         );
     }
 
-return $activity->id;
+    return $activity->id;
 }
 
 /**
@@ -163,6 +162,8 @@ function hva_update_instance($data)
 
     if (isset($data->zipfile)) {
         $context = context_module::instance($cm->id);
+        var_dump($context->id);
+        die;
         file_save_draft_area_files(
             $data->zipfile,
             $context->id,

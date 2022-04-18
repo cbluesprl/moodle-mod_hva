@@ -26,6 +26,8 @@ require_once $CFG->libdir . '/completionlib.php';
 require_once $CFG->dirroot . '/mod/hva/lib.php';
 require_once $CFG->dirroot . '/mod/hva/classes/PinHva.php';
 
+global $USER, $COURSE;
+
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or
 $hid = optional_param('hid', 0, PARAM_INT);  // HVA ID.
 
@@ -48,20 +50,26 @@ require_login($course, false, $cm);
 $url = new moodle_url('/mod/hva/view.php', ['id' => $cm->id]);
 $PAGE->set_url($url);
 
-
 echo $OUTPUT->header();
+$role = get_user_roles_in_course($USER->id, $COURSE->id);
+
+//TODO:faire la condition pour afficher le bouton si l'user n'est pas un étudiant
+if ($role !== 'Student') {
+    echo html_writer::start_tag('button', ['class' => 'btn btn-link']);
+    echo html_writer::tag('a', get_string('pagetest', 'hva'), ['href' => '/mod/hva/test.php']);
+    echo html_writer::end_tag('button');
+}
 
 if (is_object($hva) && isset($USER)) {
     try {
         $a = new StdClass();
         $a->delay = (PinHva::$duration / 60);
         $a->pincode = PinHva::generate($hva->id, $USER->id);
-        echo html_writer::tag('div', get_string('pincode_message', 'hva').$a->pincode, ['class' => 'alert alert-warning']);
+        echo html_writer::tag('div', get_string('pincode_message', 'hva') . $a->pincode, ['class' => 'alert alert-warning']);
     } catch (Exception $e) {
         echo $e->getMessage();
     }
 }
 
-//echo html_writer::tag('button',)
-
 echo $OUTPUT->footer();
+

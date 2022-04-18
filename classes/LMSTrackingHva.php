@@ -38,6 +38,7 @@ class LMSTrackingHva
 
     /**
      * LMSTracking constructor.
+     *
      * @param $score
      * @param $completion
      * @throws Exception
@@ -74,7 +75,7 @@ class LMSTrackingHva
             throw new Exception("Score must be an integer");
         }
 
-        $score = (int) $score;
+        $score = (int)$score;
         if ($score < 0 || $score > 100) {
             throw new Exception("Score must be between 0 and 100");
         }

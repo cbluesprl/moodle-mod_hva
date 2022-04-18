@@ -27,35 +27,52 @@ require_once $CFG->dirroot . '/mod/hva/classes/PinHva.php';
 class Zipfile
 {
     /**
+     * return url for download the zipfile
+     *
      * @param $cmid
-     * @return bool|stored_file|null
+     * @return string
      * @throws dml_exception
      */
-    static function get_zipfile_from_pincode($pincode)
+    static function get_zipfile_from_pincode($hvaData)
     {
         global $DB;
 
-        $pin = \PinHva::get_from_pin($pincode);
-        $cmid = HVA::get_cmid_from_hvaid($pin->hva->id);
+        $cmid = HVA::get_cmid_from_hvaid($hvaData->hva->id);
         $object = new stdClass();
-
         $fs = get_file_storage();
         $context = context_module::instance($cmid);
+
+        $r = $DB->get_record_sql(
+            "SELECT et.token
+            FROM mdl_external_tokens et
+            JOIN mdl_external_services es ON es.id = et.externalserviceid AND es.name = 'hva'
+            "
+        );
+
         $file_info = $DB->get_record_sql(
             "SELECT *
-            FROM {files}
-            WHERE contextid = :contextid AND component = 'mod_hva' AND itemid = '1' AND filepath = '/' AND filename != '.'",
+                FROM {files}
+                WHERE contextid = :contextid AND component = 'mod_hva' AND itemid = '1' AND filepath = '/' AND filename != '.' AND filearea = 'zipfile'",
             ['contextid' => $context->id]
         );
+
         if ($file_info !== false) {
             $file = $fs->get_file($context->id, 'mod_hva', 'zipfile', 1, '/', $file_info->filename);
-            $url = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename(), false);
-            var_dump($url->out());die;
-            $object->url = $url->out();
-            return $object;
+            $url = moodle_url::make_webservice_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename(), false);
+            if (isloggedin()) {
+                $object->url = $url->out() . '?token=' . $r->token;
+                return $object;
+            } else {
+                header('Content-type: application/zip');
+                header("Content-Disposition: attachement; filename=" . $file->get_filename() . '"');
+                header("Content-length: " . filesize($file->get_filepath()));
+                header("Pragma: no-cache");
+                header("Expires: 0");
+                $object->url = $url->out();
+                readfile($url->out());
+            }
         } else {
             return null;
         }
     }
-
 }

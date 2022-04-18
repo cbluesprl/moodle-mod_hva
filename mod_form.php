@@ -40,7 +40,6 @@ class mod_hva_mod_form extends moodleform_mod
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
 
-
         // Zip File upload.
         $filemanageroptions = [];
         $filemanageroptions['accepted_types'] = ['.zip'];
@@ -59,7 +58,6 @@ class mod_hva_mod_form extends moodleform_mod
 
         $mform->addElement('filemanager', 'metadatafile', get_string('metadata', 'hva'), null, $filemanageroptions);
         $mform->addHelpButton('metadatafile', 'metadata', 'arvr');
-
 
         $this->standard_coursemodule_elements();
 
