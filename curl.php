@@ -38,7 +38,12 @@ function curl_get_info($pincode, $token)
 
     if (!empty($resp)) {
         if (isset($resp->errorcode)) {
-            return 'test';
+            return $resp->errorcode;
+        }
+        if ($resp->LMSTracking->completion == 0 || $resp->LMSTracking->completion == 1) {
+            $resp->LMSTracking->completion == 0 ? $resp->LMSTracking->completion = get_string('incompleted','mod_hva') : $resp->LMSTracking->completion = get_string('completed','mod_hva');
+        } else {
+            $resp->LMSTracking->completion == 3 ? $resp->LMSTracking->completion = get_string('failed','mod_hva') : $resp->LMSTracking->completion = get_string('passed','mod_hva');
         }
         return $resp;
     } else {
@@ -62,12 +67,13 @@ function curl_get_zip($pincode, $token)
     $resp = json_decode($curl->get($url));
 
     if (!empty($resp)) {
+        if (isset($resp->errorcode)) {
+            return $resp->errorcode;
+        }
         return $resp;
     } else {
         return 'data empty';
     }
-
-    return 'error web service';
 }
 
 /**

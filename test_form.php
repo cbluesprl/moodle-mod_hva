@@ -36,7 +36,7 @@ class mod_hva_form extends moodleform
         $mform->addElement('text', 'score', get_string('score', 'mod_hva'));
         $mform->setType('score', PARAM_INT);
 
-        $mform->addElement('text', 'completion', get_string('completion', 'mod_hva'));
+        $mform->addElement('text', 'completion', get_string('completion_form', 'mod_hva'));
         $mform->setType('completion', PARAM_TEXT);
 
         $mform->addElement('text', 'hyperfictionTracking', get_string('hyperfictionTracking', 'mod_hva'));

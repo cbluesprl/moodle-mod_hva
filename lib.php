@@ -49,9 +49,9 @@ function mod_hva_pluginfile($course, $cm, $context, $filearea, $args, $forcedown
     // Check the relevant capabilities - these may vary depending on the filearea being accessed.
     //todo:ask if this is must have
 
-    /*    if (!has_capability('mod/hva:view', $context)) {
-            return false;
-        }*/
+    if (!has_capability('mod/hva:view', $context)) {
+        return false;
+    }
 
     // Leave this line out if you set the itemid to null in make_pluginfile_url (set $itemid to 0 instead).
     $itemid = array_shift($args); // The first item in the $args array.
