@@ -94,7 +94,6 @@ class mod_hva_external extends external_api
                     ]
                 ),
                 'hyperfictionTracking' => new external_value(PARAM_RAW, 'metadata'),
-                //'zipfile' => new external_value(PARAM_TEXT, 'base64'),
             ]);
     }
 

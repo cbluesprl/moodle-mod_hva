@@ -48,7 +48,6 @@ class HVA
         $this->cmid = $this->get_cmid_from_hvaid($this->id);
 
         $metadata = $this->get_file_from_cmid($this->cmid);
-        //$zipfile = $this->get_zipfile_from_cmid($this->cmid);
 
         if ($metadata !== null) {
             var_dump($metadata);
@@ -57,11 +56,6 @@ class HVA
         } else {
             $this->metadata = '';
         }
-        /*        if ($zipfile != null) {
-                    $this->zipfile = $zipfile->get_content();
-                } else {
-                    $this->zipfile = '';
-                }*/
     }
 
     /**

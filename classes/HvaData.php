@@ -58,7 +58,6 @@ class HvaData
         } else {
             $this->hyperfictionTracking = '';
         }
-        //$this->zipfile = base64_encode($this->get_zipfile_from_cmid($this->hva->cmid)->get_content());
     }
 
     /**
