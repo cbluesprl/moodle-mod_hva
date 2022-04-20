@@ -29,9 +29,9 @@
  */
 function curl_get_info($pincode, $token)
 {
-    global $USER;
+    global $CFG;
     $curl = new curl();
-    $url = 'http://grtgaz.local73/webservice/rest/server.php?wstoken=' . $token . '&wsfunction=mod_hva_get_info&moodlewsrestformat=json';
+    $url = $CFG->wwwroot . '/webservice/rest/server.php?wstoken=' . $token . '&wsfunction=mod_hva_get_info&moodlewsrestformat=json';
     $params = 'pincode=' . $pincode;
     $url .= '&' . $params;
     $resp = json_decode($curl->get($url));
@@ -41,9 +41,9 @@ function curl_get_info($pincode, $token)
             return $resp->errorcode;
         }
         if ($resp->LMSTracking->completion == 0 || $resp->LMSTracking->completion == 1) {
-            $resp->LMSTracking->completion == 0 ? $resp->LMSTracking->completion = get_string('incompleted','mod_hva') : $resp->LMSTracking->completion = get_string('completed','mod_hva');
+            $resp->LMSTracking->completion == 0 ? $resp->LMSTracking->completion = get_string('incompleted', 'mod_hva') : $resp->LMSTracking->completion = get_string('completed', 'mod_hva');
         } else {
-            $resp->LMSTracking->completion == 3 ? $resp->LMSTracking->completion = get_string('failed','mod_hva') : $resp->LMSTracking->completion = get_string('passed','mod_hva');
+            $resp->LMSTracking->completion == 3 ? $resp->LMSTracking->completion = get_string('failed', 'mod_hva') : $resp->LMSTracking->completion = get_string('passed', 'mod_hva');
         }
         return $resp;
     } else {
@@ -60,8 +60,9 @@ function curl_get_info($pincode, $token)
  */
 function curl_get_zip($pincode, $token)
 {
+    global $CFG;
     $curl = new curl();
-    $url = 'http://grtgaz.local73/webservice/rest/server.php?wstoken=' . $token . '&wsfunction=mod_hva_get_zip&moodlewsrestformat=json';
+    $url = $CFG->wwwroot . '/webservice/rest/server.php?wstoken=' . $token . '&wsfunction=mod_hva_get_zip&moodlewsrestformat=json';
     $params = 'pincode=' . $pincode;
     $url .= '&' . $params;
     $resp = json_decode($curl->get($url));
@@ -90,8 +91,9 @@ function curl_get_zip($pincode, $token)
  */
 function curl_save_data($pincode, $score, $completion, $hyperfictionTracking, $token)
 {
+    global $CFG;
     $curl = new curl();
-    $url = 'http://grtgaz.local73/webservice/rest/server.php?wstoken=' . $token . '&wsfunction=mod_hva_save_data&moodlewsrestformat=json';
+    $url = $CFG->wwwroot . '/webservice/rest/server.php?wstoken=' . $token . '&wsfunction=mod_hva_save_data&moodlewsrestformat=json';
     $LMSTracking = [
         'score' => $score,
         'completion' => $completion
@@ -102,7 +104,7 @@ function curl_save_data($pincode, $score, $completion, $hyperfictionTracking, $t
         'hyperfictionTracking' => $hyperfictionTracking,
     ];
     $params = format_postdata_for_curlcall($params);
-    // $params = json_encode($params);
+
     $resp = $curl->post($url, $params);
     if (!empty($resp)) {
         $data = json_decode($resp);

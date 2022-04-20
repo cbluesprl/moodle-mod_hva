@@ -86,6 +86,7 @@ if (!isset($r)) {
             if ($data->web_service === 'save_data') {
                 $resp = curl_save_data($data->pincode, $data->score, $data->completion, $data->hyperfictionTracking, $r->token);
                 var_dump($resp->status);die;
+
                 if ($resp->status == 'save succeeded') {
                     echo html_writer::tag('div', get_string('savedone', 'mod_hva'), ['class' => 'alert alert-warning']);
                 }
