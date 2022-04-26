@@ -46,6 +46,16 @@ $capabilities = [
             'manager' => CAP_ALLOW,
             'student' => CAP_ALLOW
         ]
+    ],
+    'mod/hva:test' => [
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => [
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW,
+            'student' => CAP_PROHIBIT
+        ]
     ]
 ];
 

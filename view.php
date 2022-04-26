@@ -51,10 +51,8 @@ $url = new moodle_url('/mod/hva/view.php', ['id' => $cm->id]);
 $PAGE->set_url($url);
 
 echo $OUTPUT->header();
-$role = get_user_roles_in_course($USER->id, $COURSE->id);
 
-//TODO:faire la condition pour afficher le bouton si l'user n'est pas un étudiant
-if ($role !== 'Student') {
+if (has_capability('mod/hva:test',$context)) {
     echo html_writer::start_tag('button', ['class' => 'btn btn-link']);
     echo html_writer::tag('a', get_string('pagetest', 'hva'), ['href' => '/mod/hva/test.php']);
     echo html_writer::end_tag('button');
