@@ -30,7 +30,7 @@ use dml_exception;
 
 require_once __DIR__ . '/../../../../config.php';
 
-class delete_pincode_arvr extends scheduled_task
+class delete_pincode_hva extends scheduled_task
 {
     /**
      * Get a descriptive name for this task (shown to admins).

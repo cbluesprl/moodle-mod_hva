@@ -22,7 +22,7 @@
 
 $tasks = [
     [
-        'classname' => 'mod_arvr\task\delete_pincode_arvr',
+        'classname' => 'mod_hva\task\delete_pincode_hva',
         'blocking' => 0,
         'minute' => '01',
         'hour' => '*',
