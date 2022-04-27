@@ -30,6 +30,9 @@ class mod_hva_form extends moodleform
     {
         $mform =& $this->_form;
 
+        $mform->addElement('text', 'token', get_string('token', 'mod_hva'));
+        $mform->setType('token', PARAM_INT);
+
         $mform->addElement('text', 'pincode', get_string('pincode', 'mod_hva'));
         $mform->setType('pincode', PARAM_INT);
 

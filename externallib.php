@@ -58,6 +58,7 @@ class mod_hva_external extends external_api
         require_once __DIR__ . '/../../config.php';
         require_once $CFG->dirroot . '/mod/hva/classes/PinHva.php';
         require_once $CFG->dirroot . '/mod/hva/classes/HvaData.php';
+        require_once $CFG->dirroot . '/mod/hva/classes/Zipfile.php';
 
         $params = self::validate_parameters(self::get_info_parameters(), ['pincode' => $pincode]);
 
@@ -77,7 +78,11 @@ class mod_hva_external extends external_api
         //update the pincode time
         PinHva::update($pincode);
 
-        return $hvaData->output();
+        $object = $hvaData->output();
+
+        $object->url = Zipfile::get_zipfile_from_pincode($hvaData)->url;
+
+        return $object;
     }
 
     public static function get_info_returns()
@@ -94,61 +99,10 @@ class mod_hva_external extends external_api
                     ]
                 ),
                 'hyperfictionTracking' => new external_value(PARAM_RAW, 'metadata'),
-            ]);
-    }
-
-    public static function get_zip_parameters()
-    {
-        return new external_function_parameters(
-            [
-                'pincode' => new external_value(PARAM_INT, 'Code pin')
-            ]
-        );
-    }
-
-    /**
-     * return url for dowwnload the zip file
-     *
-     * @param $pincode
-     * @return string
-     * @throws dml_exception
-     * @throws invalid_parameter_exception
-     */
-    public static function get_zip($pincode)
-    {
-        //give link to dl the zipµ
-        global $CFG;
-        require_once __DIR__ . '/../../config.php';
-        require_once $CFG->dirroot . '/mod/hva/classes/PinHva.php';
-        require_once $CFG->dirroot . '/mod/hva/classes/HvaData.php';
-        require_once $CFG->dirroot . '/mod/hva/classes/Zipfile.php';
-
-        $params = self::validate_parameters(self::get_zip_parameters(), ['pincode' => $pincode]);
-
-        if (!isset($params) || empty($params) || !PinHva::is_valid($params)) {
-            if (!empty($object->error)) {
-                $msg = "HTTP/1.0 " . $object->error;
-            } else {
-                $msg = "HTTP/1.0 403";
-            }
-            header($msg);
-            if (isset($object->message)) {
-                echo $object->message;
-            }
-        }
-        //create object with all data by pincode
-        $hvaData = HvaData::get_from_pin($params);
-
-        return Zipfile::get_zipfile_from_pincode($hvaData);
-    }
-
-    public static function get_zip_returns()
-    {
-        return new external_single_structure(
-            [
                 'url' => new external_value(PARAM_URL, 'link for download the zip file')
             ]);
     }
+
 
     public static function save_data_parameters()
     {

@@ -35,43 +35,19 @@ function curl_get_info($pincode, $token)
     $params = 'pincode=' . $pincode;
     $url .= '&' . $params;
     $resp = json_decode($curl->get($url));
+    $resp_json = json_decode($curl->get($url));
 
     if (!empty($resp)) {
         if (isset($resp->errorcode)) {
-            return $resp->errorcode;
+
+            return [$resp->errorcode, false];
         }
         if ($resp->LMSTracking->completion == 0 || $resp->LMSTracking->completion == 1) {
             $resp->LMSTracking->completion == 0 ? $resp->LMSTracking->completion = get_string('incompleted', 'mod_hva') : $resp->LMSTracking->completion = get_string('completed', 'mod_hva');
         } else {
             $resp->LMSTracking->completion == 3 ? $resp->LMSTracking->completion = get_string('failed', 'mod_hva') : $resp->LMSTracking->completion = get_string('passed', 'mod_hva');
         }
-        return $resp;
-    } else {
-        return 'data empty';
-    }
-}
-
-/**
- * curl for test get_zip webservice and return only the url
- *
- * @param $pincode
- * @param $token
- * @return bool|string
- */
-function curl_get_zip($pincode, $token)
-{
-    global $CFG;
-    $curl = new curl();
-    $url = $CFG->wwwroot . '/webservice/rest/server.php?wstoken=' . $token . '&wsfunction=mod_hva_get_zip&moodlewsrestformat=json';
-    $params = 'pincode=' . $pincode;
-    $url .= '&' . $params;
-    $resp = json_decode($curl->get($url));
-
-    if (!empty($resp)) {
-        if (isset($resp->errorcode)) {
-            return $resp->errorcode;
-        }
-        return $resp;
+        return [$resp,$resp_json];
     } else {
         return 'data empty';
     }
@@ -92,6 +68,13 @@ function curl_get_zip($pincode, $token)
 function curl_save_data($pincode, $score, $completion, $hyperfictionTracking, $token)
 {
     global $CFG;
+
+    if ($completion == 'incompleted'|| $completion == 'completed') {
+        $completion == 'incompleted' ? $completion = 0 : $completion = 1;
+    } else {
+        $completion == 'failed' ? $completion = 3 : $completion = 2;
+    }
+
     $curl = new curl();
     $url = $CFG->wwwroot . '/webservice/rest/server.php?wstoken=' . $token . '&wsfunction=mod_hva_save_data&moodlewsrestformat=json';
     $LMSTracking = [
