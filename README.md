@@ -1,42 +1,47 @@
 # mod_hva
 
-Plugin name : "Hyperfiction VR Activity"
-
-## Description
-{{ à faire}}
+Nom du pluggin : "Hyperfiction VR Activity"
 
 ## Installation
 
-There are two installation methods available.
-Follow one of these, then log into your Moodle site as an administrator and visit the notifications page to complete the install.
+Deux méthodes d'installation sont disponibles.
+Suivez l'une d'entre elles, puis connectez-vous à votre site Moodle en tant qu'administrateur et visitez la page des notifications pour terminer l'installation.
 
 ### GIT
 
-This requires Git being installed. If you do not have Git installed, please visit the Git website.
-Once you have Git installed, simply visit your Moodle mod directory and clone the repository using the following command.
+Cela nécessite que Git soit installé. Si vous n'avez pas installé Git, veuillez visiter le site web de Git.
+Une fois Git installé, rendez-vous simplement dans votre répertoire Moodle mod et clonez le dépôt en utilisant la commande suivante.
 
 git clone https://github.com/cbluesprl/moodle-mod_hva.git hva
 
-Or add it with submodule command if you use submodules.
+Ou ajoutez-le avec la commande submodule si vous utilisez des submodules.
 
 git submodule add https://github.com/cbluesprl/moodle-mod_hva.git mod/hva
 
 ### Download the zip
 
-Visit the Moodle plugins website and download the zip corresponding to the version of Moodle you are using. Extract the zip and place the 'hva' folder in the mod folder in your Moodle directory.
+Visitez le site web des plugins Moodle et téléchargez le zip correspondant à la version de Moodle que vous utilisez. Extrayez le zip et placez le dossier 'hva' dans le dossier mod de votre répertoire Moodle.
+
+
+## Dépendances
+
+aucune
 
 ### Pré-requis
 
-Need to enable web service REST for use the web service.
+Vous devez activer web service REST de votre plateforme pour utiliser ce pluggin et paramètrer un token pour  les webservice du pluggin Hyperfiction VR Activity.
 
+Vous pouvez retrouver la documentation nécessaire à cela sur :
+
+`https://docs.moodle.org/400/en/Using_web_services`
 
 ## Test
 
-Une page test est accessible aux professeurs, manager et admin mias pas aux étudiant.
+Une page de test est accessible aux managers avec la capability suivante : 'mod/hva:test' .
 
 ## Webservices
 
-There 3 webservices : 
+Ce plugin fonctionne avec 2 webservice :  
 
 ### get_info 
 
@@ -45,63 +50,24 @@ There 3 webservices :
 Il faut fournir le paramètre suivant :
 `pincode` : le code pin de l'étudiant au lancement de l'activité.
 
-Voici un exemple json des paramètres :
 
+Voici un exemple de json que doit retourner le ws :
 ```json
 {
-    "methodname": "mod_hva_get_info",
-    "args": {
-        "pincode" : 9347
-    }
-}
-```
-
-Voici un exemple de ce que doit retourner le ws d'information :
-```json
-{
-  "error": false,
-  "data": {
-    "studentId": 2,
-    "studentName": "Nom Prénom",
-    "activityTitle": "Exemple d'activité HVA",
-    "LMSTracking": {
-      "score": 0,
-      "completion": "0"
-    },
-    "hyperfictionTracking": "{\"browsers\":{\"firefox\":{\"name\":\"Firefox\",\"pref_url\":\"about:config\",\"releases\":{\"1\":{\"release_date\":\"2004-11-09\",\"status\":\"retired\",\"engine\":\"Gecko\",\"engine_version\":\"1.7\"}}}}}"
-  }
+  "studentId": 2,
+  "studentName": "Nom Prénom",
+  "activityTitle": "activité de test",
+  "LMSTracking": {
+    "score": 88,
+    "completion": "3"
+  },
+  "hyperfictionTracking": "{\"valeur\":1,\"valeur\":2}",
+  "url": "http://plateforme/webservice/pluginfile.php/73/mod_hva/zipfile/1/nom_du_fichier.zip?token=dd315c54548c8ef9b1238b11111b27c3"
 }
 ```
 
 Le tracking json retourner est en string.
 
-### get_zip
-
-`/webservice/rest/server.php?wstoken=token&wsfunction=mod_hva_get_info&moodlewsrestformat=json`
-
-Il faut fournir le paramètre suivant :
-`pincode` : le code pin de l'étudiant au lancement de l'activité.
-
-Voici un exemple json des paramètres :
-
-```json
-{
-    "methodname": "mod_hva_get_zip",
-    "args": {
-        "pincode" : 9347
-    }
-}
-```
-
-Voici un exemple de ce que doit retourner le ws d'information :
-```json
-{
-    "error": false,
-    "data": {
-        "url": "http://grtgaz.local73/webservice/pluginfile.php/73/mod_hva/zipfile/1/local_obf_moodle311_2022020200%281%29.zip?token=dd315c54548c8ef9b1238b11111b27c3"
-    }
-}
-```
 ### save_data
 
 `/webservice/rest/server.php?wstoken=token&wsfunction=mod_hva_get_info&moodlewsrestformat=json`
@@ -110,23 +76,15 @@ Ce web service retourne le status 'save succeeded' si la sauvegarde à fonctionn
 
 Il faut fournir les paramètres :
 
-* `methodname` : le nom de la méthode (mod_hva_save_data)
 * `pincode` : le code pin récupéré dans l'activité hva
-* `LMSTracking` : Ce paramètre doit contenir le paramètre score et completion
-* `hyperfictionTracking` : Le json à sauvegarder sur la plateforme. Le json doit être converti en string pour pouvoir être stocker
+* `LMSTracking[score]` : Ce paramètre doit contenir le paramètre score 
+* `LMSTracking[completion]` : Ce paramètre doit contenir le paramètre completion
+* `hyperfictionTracking` : Le json à sauvegarder sur la plateforme.
 
-Voici un exemple json des paramètres :
+Si le webservice à fonctionner, vous recevez un json avec ce status :
 ```json
 {
-    "methodname": "mod_hva_save_data",
-    "args": {
-        "pincode" : 9347,
-        "LMSTracking": {
-            "score": 99,
-            "completion":"completed"
-        },
-        "hyperfictionTracking" : "{\"browsers\":{\"firefox\":{\"name\":\"Firefox\",\"pref_url\":\"about:config\",\"releases\":{\"1\":{\"release_date\":\"2004-11-09\",\"status\":\"retired\",\"engine\":\"Gecko\",\"engine_version\":\"1.7\"}}}}}"
-    }
+  "status": "save succeeded"
 }
 ```
 

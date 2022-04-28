@@ -52,8 +52,26 @@ $PAGE->set_url($url);
 
 echo $OUTPUT->header();
 
+echo '<style>
+    #btn_test {
+        display: flex;
+        width: 100%;
+        flex-direction: row-reverse;
+        margin-bottom: 20px;
+    }
+    
+    #btn_test a {
+    padding: 8px;
+        border: 2px solid #00a984;
+        border-radius: 20px;
+    }
+</style>';
+
+
+
+
 if (has_capability('mod/hva:test',$context)) {
-    echo html_writer::start_tag('button', ['class' => 'btn btn-link']);
+    echo html_writer::start_tag('button', ['class' => 'btn btn-link','id' => 'btn_test']);
     echo html_writer::tag('a', get_string('pagetest', 'hva'), ['href' => '/mod/hva/test.php']);
     echo html_writer::end_tag('button');
 }

@@ -36,7 +36,7 @@ $url = new moodle_url('test.php');
 $context = context_system::instance();
 $PAGE->set_context($context);
 
-$PAGE->set_heading('Curl test');
+$PAGE->set_heading('Test plugin HVA');
 $PAGE->set_url("/mod/hva/test.php");
 
 $r = $DB->get_record_sql(
