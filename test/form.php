@@ -31,7 +31,7 @@ class mod_hva_form extends moodleform
         $mform =& $this->_form;
 
         $mform->addElement('text', 'token', get_string('token', 'mod_hva'));
-        $mform->setType('token', PARAM_INT);
+        $mform->setType('token', PARAM_TEXT);
 
         $mform->addElement('text', 'pincode', get_string('pincode', 'mod_hva'));
         $mform->setType('pincode', PARAM_INT);
@@ -47,7 +47,6 @@ class mod_hva_form extends moodleform
 
         $options = [
             'get_info' => 'get_info',
-            'get_zip' => 'get_zip',
             'save_data' => 'save_data',
         ];
         $mform->addElement('select', 'web_service', get_string('webservice', 'mod_hva'), $options);

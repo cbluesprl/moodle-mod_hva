@@ -72,7 +72,7 @@ echo '<style>
 
 if (has_capability('mod/hva:test',$context)) {
     echo html_writer::start_tag('button', ['class' => 'btn btn-link','id' => 'btn_test']);
-    echo html_writer::tag('a', get_string('pagetest', 'hva'), ['href' => '/mod/hva/test.php']);
+    echo html_writer::tag('a', get_string('pagetest', 'hva'), ['href' => '/mod/hva/test/index.php']);
     echo html_writer::end_tag('button');
 }
 

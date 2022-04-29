@@ -39,7 +39,6 @@ function curl_get_info($pincode, $token)
 
     if (!empty($resp)) {
         if (isset($resp->errorcode)) {
-
             return [$resp->errorcode, false];
         }
         if ($resp->LMSTracking->completion == 0 || $resp->LMSTracking->completion == 1) {
@@ -88,17 +87,19 @@ function curl_save_data($pincode, $score, $completion, $hyperfictionTracking, $t
     ];
     $params = format_postdata_for_curlcall($params);
 
-    $resp = $curl->post($url, $params);
-    if (!empty($resp)) {
-        $data = json_decode($resp);
-        if (!empty($data)) {
-            return $data;
-        } else {
-            return 'data empty';
-        }
-    }
+    $resp = json_decode($curl->post($url, $params));
 
-    return 'error';
+    if (!empty($resp)) {
+        if (isset($resp->errorcode)) {
+            return $resp->errorcode;
+        } if ($resp->status != "save succeeded") {
+            $resp->errorcode = "invalidrecord";
+            return $resp->errorcode;
+        }
+        return $resp;
+    } else {
+        return 'error ';
+    }
 }
 
 
