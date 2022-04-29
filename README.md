@@ -50,6 +50,9 @@ Ce plugin fonctionne avec 2 webservice :
 Il faut fournir le paramètre suivant :
 `pincode` : le code pin de l'étudiant au lancement de l'activité.
 
+Exemple d'URL complet :
+
+`http://grtgaz.local73/webservice/rest/server.php?wstoken=dd315c54548c8ef9b1238b11111b27c3&wsfunction=mod_hva_get_info&moodlewsrestformat=json&pincode=6474`
 
 Voici un exemple de json que doit retourner le ws :
 ```json
@@ -81,7 +84,12 @@ Il faut fournir les paramètres :
 * `LMSTracking[completion]` : Ce paramètre doit contenir le paramètre completion
 * `hyperfictionTracking` : Le json à sauvegarder sur la plateforme.
 
+Exemple d'URL complet :
+
+`/webservice/rest/server.php?wstoken=dd315c54548c8ef9b1238b11111b27c3&wsfunction=mod_hva_save_data&moodlewsrestformat=json&pincode=6474&LMSTracking[score]=88&LMSTracking[completion]=completed&hyperfictionTracking={"valeur":1,"valeur":2}`
+
 Si le webservice à fonctionner, vous recevez un json avec ce status :
+
 ```json
 {
   "status": "save succeeded"
