@@ -62,17 +62,6 @@ class mod_hva_external extends external_api
 
         $params = self::validate_parameters(self::get_info_parameters(), ['pincode' => $pincode]);
 
-        if (!isset($params) || empty($params) || !PinHva::is_valid($params)) {
-            if (!empty($object->error)) {
-                $msg = "HTTP/1.0 " . $object->error;
-            } else {
-                $msg = "HTTP/1.0 403";
-            }
-            header($msg);
-            if (isset($object->message)) {
-                echo $object->message;
-            }
-        }
         //create object with all data by pincode
         $hvaData = HvaData::get_from_pin($params);
         //update the pincode time
