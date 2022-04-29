@@ -28,6 +28,7 @@ $string['completed'] = 'completed';
 $string['completion'] = 'Completion of the student : ';
 $string['completion_form'] = 'Completion of the student (incompleted,completed,passed,failed) : ';
 $string['failed'] = 'fail';
+$string['hvaintro'] = 'HVA introduction';
 $string['hvaname'] = 'Activity\'s name';
 $string['hyperfictionTracking'] = 'Tracking of the student : ';
 $string['incompleted'] = 'incompleted';

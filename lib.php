@@ -95,8 +95,7 @@ function hva_add_instance($data)
     $activity->timecreated = time();
     $activity->timemodified = $activity->timecreated;
     $activity->id = $DB->insert_record('hva', $activity, true);
-    //var_dump($data);die;
-//TODO : dump data pour s'assurer que le cmid est le bon (coursemodule ??)
+
     if (isset($data->metadata)) {
         $cmid = $data->coursemodule;
         $context = context_module::instance(40);
@@ -162,8 +161,6 @@ function hva_update_instance($data)
 
     if (isset($data->zipfile)) {
         $context = context_module::instance($cm->id);
-        var_dump($context->id);
-        die;
         file_save_draft_area_files(
             $data->zipfile,
             $context->id,

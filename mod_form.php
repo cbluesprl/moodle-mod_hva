@@ -36,9 +36,26 @@ class mod_hva_mod_form extends moodleform_mod
 
         $mform =& $this->_form;
 
-        $mform->addElement('text', 'name', get_string('hvaname', 'hva'), ['size' => '64']);
-        $mform->setType('name', PARAM_TEXT);
+        $mform->addElement('text', 'name', get_string('name'), ['size' => '48']);
+        if (!empty($CFG->formatstringstriptags)) {
+            $mform->setType('name', PARAM_TEXT);
+        } else {
+            $mform->setType('name', PARAM_CLEANHTML);
+        }
         $mform->addRule('name', null, 'required', null, 'client');
+        $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+
+        $this->standard_intro_elements(get_string('hvaintro', 'hva'));
+        $mform->setAdvanced('introeditor');
+
+        // Display the label to the right of the checkbox so it looks better & matches rest of the form.
+        if ($mform->elementExists('showdescription')) {
+            $coursedesc = $mform->getElement('showdescription');
+            if (!empty($coursedesc)) {
+                $coursedesc->setText(' ' . $coursedesc->getLabel());
+                $coursedesc->setLabel('&nbsp');
+            }
+        }
 
         // Zip File upload.
         $filemanageroptions = [];

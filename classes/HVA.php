@@ -50,8 +50,6 @@ class HVA
         $metadata = $this->get_file_from_cmid($this->cmid);
 
         if ($metadata !== null) {
-            var_dump($metadata);
-            die;
             $this->metadata = json_decode($metadata->get_content());
         } else {
             $this->metadata = '';
