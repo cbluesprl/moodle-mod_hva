@@ -38,14 +38,5 @@ $functions = array(
         'description' => 'Save tracking of user.',    //human readable description of the web service function
         'type'        => 'write',                  //database rights of the web service function (read, write)
         'ajax' => true,        // is the service available to 'internal' ajax calls.
-    ),
-    'mod_hva_get_zip' => array(         //web service function name
-        'classname'   => 'mod_hva_external',  //class containing the external function OR namespaced class in classes/external/XXXX.php
-        'methodname'  => 'get_zip',          //external function name
-        'classpath'   => 'mod/hva/externallib.php',  //file containing the class/external function - not required if using namespaced auto-loading classes.
-        // defaults to the service's externalib.php
-        'description' => 'Download zip file.',    //human readable description of the web service function
-        'type'        => 'write',                  //database rights of the web service function (read, write)
-        'ajax' => true,        // is the service available to 'internal' ajax calls.
     )
 );
