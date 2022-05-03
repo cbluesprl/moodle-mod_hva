@@ -56,6 +56,3 @@ $string['tokennotset'] = 'Attention ! Il faut paramètrer le token via la page E
 $string['url'] = 'Url : ';
 $string['webservice'] = 'Webservice';
 $string['zipfile'] = 'Fichier zip';
-$string['hva:test'] = 'Donner l\'accès à la page de test du plugin hva';
-$string['hva:view'] = 'Afficher l\'activité HVA';
-$string['hva:addinstance'] = 'Ajouter une nouvelle activité HVA';
