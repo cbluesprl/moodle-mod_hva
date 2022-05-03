@@ -1,0 +1,12 @@
+#btn_test {
+    display: flex;
+    width: 100%;
+    flex-direction: row-reverse;
+    margin-bottom: 20px;
+}
+
+#btn_test a {
+    padding: 8px;
+    border: 2px solid #00a984;
+    border-radius: 20px;
+}

@@ -125,7 +125,6 @@ class mod_hva_external extends external_api
         require_once $CFG->dirroot . '/mod/hva/classes/PinHva.php';
         require_once $CFG->dirroot . '/mod/hva/classes/HvaData.php';
 
-        //$hyper = json_decode($hyperfictionTracking);
 
         $params = self::validate_parameters(self::save_data_parameters(), ['pincode' => $pincode, 'LMSTracking' => $LMSTracking, 'hyperfictionTracking' => $hyperfictionTracking]);
         $message = new stdClass();

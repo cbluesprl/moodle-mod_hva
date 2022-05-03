@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -13,7 +14,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
  * @package     mod_hva
  * @author      Loïc Hannecart <lhannecart@cblue.be>
@@ -23,8 +23,35 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'mod_hva';
-$plugin->version = 2022042703;
-$plugin->requires = 2018120306.12;
-$plugin->maturity = MATURITY_STABLE;
-$plugin->release = 'v1.0.0';
+global $CFG;
+
+require_once $CFG->libdir . '/gradelib.php';
+
+function hva_grade_item_update($hva, $grades=NULL) {
+    global $CFG;
+    if (!function_exists('grade_update')) { //workaround for buggy PHP versions
+        require_once($CFG->libdir.'/gradelib.php');
+    }
+
+    $params = array('itemname'=>$hva->name, 'idnumber'=>$hva->cmidnumber);
+
+    if (!$hva->assessed or $hva->scale == 0) {
+        $params['gradetype'] = GRADE_TYPE_NONE;
+
+    } else if ($hva->scale > 0) {
+        $params['gradetype'] = GRADE_TYPE_VALUE;
+        $params['grademax']  = $hva->scale;
+        $params['grademin']  = 0;
+
+    } else if ($hva->scale < 0) {
+        $params['gradetype'] = GRADE_TYPE_SCALE;
+        $params['scaleid']   = -$hva->scale;
+    }
+
+    if ($grades  === 'reset') {
+        $params['reset'] = true;
+        $grades = NULL;
+    }
+
+    return grade_update('mod/hva', $hva->course, 'mod_hva', 'hva', $hva->id, 0, $grades, $params);
+}

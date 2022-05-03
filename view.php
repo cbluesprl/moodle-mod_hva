@@ -50,25 +50,9 @@ require_login($course, false, $cm);
 $url = new moodle_url('/mod/hva/view.php', ['id' => $cm->id]);
 $PAGE->set_url($url);
 
+$PAGE->requires->css('/mod/hva/style.css');
+
 echo $OUTPUT->header();
-
-echo '<style>
-    #btn_test {
-        display: flex;
-        width: 100%;
-        flex-direction: row-reverse;
-        margin-bottom: 20px;
-    }
-    
-    #btn_test a {
-    padding: 8px;
-        border: 2px solid #00a984;
-        border-radius: 20px;
-    }
-</style>';
-
-
-
 
 if (has_capability('mod/hva:test',$context)) {
     echo html_writer::start_tag('button', ['class' => 'btn btn-link','id' => 'btn_test']);

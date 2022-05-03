@@ -92,7 +92,9 @@ class HvaData
      */
     public function update_tracking($infos)
     {
-        global $DB;
+        global $DB, $CFG;
+        require_once $CFG->dirroot .'/lib/gradelib.php';
+
 
         $score = isset($infos->LMSTracking['score']) ? $infos->LMSTracking['score']: $this->LMSTracking->score;
         $completion = isset($infos->LMSTracking['completion']) ? $infos->LMSTracking['completion'] : $this->LMSTracking->completion;
@@ -107,6 +109,9 @@ class HvaData
         $o->score = $tracking->score;
         $o->timemodified = time();
 
+        $cm = $DB->get_record_sql("SELECT * FROM mdl_course_modules WHERE instance = {$this->hva->id} AND module = (SELECT id FROM mdl_modules WHERE name LIKE 'hva')");
+        $course = $DB->get_record_sql("SELECT * FROM mdl_course WHERE id = $cm->course");
+
         if ($this->id === null) { // if id is null, that means that no tracking is currently stored in the database
             $o->timecreated = $o->timemodified;
             $o->id = $DB->insert_record(self::$table, $o);
@@ -115,13 +120,22 @@ class HvaData
             $DB->update_record(self::$table, $o);
         }
 
+        // Handle moodle grade book
+        $grade = new stdClass();
+        $grade->userid = $this->user->id;
+        $grade->rawgrade = $o->score;
+        $grade->finalgrade = $o->score;
+
+        $itemdetails = [];
+        $itemdetails['grademin'] = 0;
+        $itemdetails['grademax'] = 100;
+        grade_update('mod_hva', $course->id, 'mod', 'hva', $cm->instance, 0, $grade, $itemdetails);
+
         // Update Moodle Completion
-        $cm = $DB->get_record_sql("SELECT * FROM mdl_course_modules WHERE instance = {$this->hva->id} AND module = (SELECT id FROM mdl_modules WHERE name LIKE 'hva')");
-        $course = $DB->get_record_sql("SELECT * FROM mdl_course WHERE id = $cm->course");
         $completion = new completion_info($course);
         $completion->set_module_viewed($cm);
         if ($completion->is_enabled($cm)) {
-            // $completion->update_state($cm, $tracking->completion, $this->user->id);
+             $completion->update_state($cm, $tracking->completion, $this->user->id);
             $current = $completion->get_data($cm, false, $this->user->id);
             $current->completionstate = $tracking->completion;
             $current->timemodified = time();
