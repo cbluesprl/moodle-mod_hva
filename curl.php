@@ -92,7 +92,7 @@ function curl_save_data($pincode, $score, $completion, $hyperfictionTracking, $t
     if (!empty($resp)) {
         if (isset($resp->errorcode)) {
             return $resp->errorcode;
-        } if ($resp->status != "save succeeded") {
+        } else if ($resp->status != "save succeeded") {
             $resp->errorcode = "invalidrecord";
             return $resp->errorcode;
         }
@@ -102,5 +102,5 @@ function curl_save_data($pincode, $score, $completion, $hyperfictionTracking, $t
     }
 }
 
-//dd315c54548c8ef9b1238b11111b27c3
+
 
