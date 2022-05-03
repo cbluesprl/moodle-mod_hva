@@ -84,12 +84,26 @@ class mod_hva_mod_form extends moodleform_mod
     }
 
 
+    /**
+     * @param array $data
+     * @return bool
+     */
+    public function completion_rule_enabled($data)
+    {
+        return ($data['customcompletion'] != 0);
+    }
+
 
     /**
      * @param array $default_values
      */
     public function data_preprocessing(&$default_values)
     {
+        parent::data_preprocessing($default_values);
+
+        $default_values['completion'] = 2;
+        $default_values['completionview'] = 0;
+        $default_values['completionusegrade'] = 1;
 
         if (empty($entry->id)) {
             $entry = new stdClass;

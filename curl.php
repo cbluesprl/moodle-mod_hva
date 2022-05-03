@@ -89,8 +89,6 @@ function curl_save_data($pincode, $score, $completion, $hyperfictionTracking, $t
 
     $resp = json_decode($curl->post($url, $params));
 
-    var_dump($resp);die;
-
     if (!empty($resp)) {
         if (isset($resp->errorcode)) {
             return $resp->errorcode;
