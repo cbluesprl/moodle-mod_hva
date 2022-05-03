@@ -74,6 +74,7 @@ if ($form->is_cancelled()) {
         }
         if ($data->web_service === 'save_data') {
             $resp = curl_save_data($data->pincode, $data->score, $data->completion, $data->hyperfictionTracking, $data->token);
+
             if ($resp === 'invalidrecord') {
                 echo html_writer::tag('div', get_string('invalidpincode', 'mod_hva'), ['class' => 'alert alert-danger']);
             } else if ($resp === 'invalidtoken') {
