@@ -75,12 +75,49 @@ class mod_hva_mod_form extends moodleform_mod
         $filemanageroptions['subdirs'] = 0;
 
         $mform->addElement('filemanager', 'metadatafile', get_string('metadata', 'hva'), null, $filemanageroptions);
-        $mform->addHelpButton('metadatafile', 'metadata', 'mod_hva');
 
         $this->standard_coursemodule_elements();
 
         $this->apply_admin_defaults();
 
         $this->add_action_buttons();
+    }
+
+
+
+    /**
+     * @param array $default_values
+     */
+    public function data_preprocessing(&$default_values)
+    {
+
+        if (empty($entry->id)) {
+            $entry = new stdClass;
+            $entry->id = null;
+        }
+
+        $draftitemid = file_get_submitted_draft_itemid('metadatafile');
+        file_prepare_draft_area(
+            $draftitemid,
+            $this->context->id,
+            'mod_hva',
+            'metadata',
+            0,
+            ['subdirs' => 0, 'maxfiles' => 1]
+        );
+
+        $default_values['metadatafile'] = $draftitemid;
+
+        $draftitemidzipfile = file_get_submitted_draft_itemid('zipfile');
+        file_prepare_draft_area(
+            $draftitemidzipfile,
+            $this->context->id,
+            'mod_hva',
+            'zipfile',
+            1,
+            ['subdirs' => 0, 'maxfiles' => 1]
+        );
+
+        $default_values['zipfile'] = $draftitemidzipfile;
     }
 }

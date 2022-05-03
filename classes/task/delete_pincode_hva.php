@@ -54,6 +54,6 @@ class delete_pincode_hva extends scheduled_task
     {
         global $DB;
 
-        return $DB->execute("DELETE FROM {hva_pincode} WHERE timecreated < UNIX_TIMESTAMP(NOW() - INTERVAL 120 MINUTE)");
+        return $DB->execute("DELETE FROM {hva_pincode} WHERE timemodified < UNIX_TIMESTAMP(NOW() - INTERVAL 120 MINUTE)");
     }
 }

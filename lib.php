@@ -85,9 +85,7 @@ function mod_hva_pluginfile($course, $cm, $context, $filearea, $args, $forcedown
  */
 function hva_add_instance($data)
 {
-    global $DB, $COURSE;
-
-    $course_id = context_course::instance($COURSE->id);
+    global $DB;
 
     $activity = new StdClass;
     $activity->course = $data->course;
@@ -96,11 +94,11 @@ function hva_add_instance($data)
     $activity->timemodified = $activity->timecreated;
     $activity->id = $DB->insert_record('hva', $activity, true);
 
-    if (isset($data->metadata)) {
+    if (isset($data->metadatafile)) {
         $cmid = $data->coursemodule;
-        $context = context_module::instance(40);
+        $context = context_module::instance($cmid);
         file_save_draft_area_files(
-            $data->metadata,
+            $data->metadatafile,
             $context->id,
             'mod_hva',
             'metadata',
@@ -144,14 +142,16 @@ function hva_update_instance($data)
     $activity->id = $hva->id;
     $activity->course = $data->course;
     $activity->name = $data->name;
+    $activity->intro = $data->intro;
+    $activity->introformat = $data->introformat;
     $activity->timecreated = $hva->timecreated;
     $activity->timemodified = time();
     $DB->update_record('hva', $activity);
 
-    if (isset($data->metadata)) {
+    if (isset($data->metadatafile)) {
         $context = context_module::instance($cm->id);
         file_save_draft_area_files(
-            $data->metadata,
+            $data->metadatafile,
             $context->id,
             'mod_hva',
             'metadata',
