@@ -42,12 +42,6 @@ class Zipfile
         $fs = get_file_storage();
         $context = context_module::instance($cmid);
 
-        $r = $DB->get_record_sql(
-            "SELECT et.token
-            FROM mdl_external_tokens et
-            JOIN mdl_external_services es ON es.id = et.externalserviceid AND es.name = 'hva'
-            "
-        );
 
         $file_info = $DB->get_record_sql(
             "SELECT *
@@ -59,20 +53,11 @@ class Zipfile
         if ($file_info !== false) {
             $file = $fs->get_file($context->id, 'mod_hva', 'zipfile', 1, '/', $file_info->filename);
             $url = moodle_url::make_webservice_pluginfile_url($file->get_contextid(), $file->get_component(), $file->get_filearea(), $file->get_itemid(), $file->get_filepath(), $file->get_filename(), false);
-            if (isloggedin()) {
-                $object->url = $url->out() . '?token=' . $r->token;
-                return $object;
-            } else {
-                header('Content-type: application/zip');
-                header("Content-Disposition: attachement; filename=" . $file->get_filename() . '"');
-                header("Content-length: " . filesize($file->get_filepath()));
-                header("Pragma: no-cache");
-                header("Expires: 0");
-                $object->url = $url->out();
-                readfile($url->out());
-            }
+            $object = new stdClass();
+            $object->url = $url->out() . '?token=';
+            return  $object;
         } else {
-            return null;
+            return 'empty file';
         }
     }
 }

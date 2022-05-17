@@ -43,15 +43,13 @@ function mod_hva_pluginfile($course, $cm, $context, $filearea, $args, $forcedown
         return false;
     }
 
-    // Make sure the user is logged in and has access to the module (plugins that are not course modules should leave out the 'cm' part).
-    require_login($course, true, $cm);
-
-    // Check the relevant capabilities - these may vary depending on the filearea being accessed.
-    //todo:ask if this is must have
-
-    if (!has_capability('mod/hva:view', $context)) {
-        return false;
+    if (defined('AJAX_SCRIPT') == false ) {
+        require_login($course, true, $cm);
+        if (!has_capability('mod/hva:view', $context)) {
+            return false;
+        }
     }
+
 
     // Leave this line out if you set the itemid to null in make_pluginfile_url (set $itemid to 0 instead).
     $itemid = array_shift($args); // The first item in the $args array.
