@@ -29,11 +29,19 @@ aucune
 
 ### Pré-requis
 
-Vous devez activer web service REST de votre plateforme pour utiliser ce pluggin et paramètrer un token pour  les webservice du pluggin Hyperfiction VR Activity.
+Vous devez activer web service REST de votre plateforme pour utiliser ce plugin et paramètrer un token pour  les webservice du plugin Hyperfiction VR Activity.
 
 Vous pouvez retrouver la documentation nécessaire à cela sur :
 
 `https://docs.moodle.org/400/en/Using_web_services`
+
+ou les étapes à suivre : 
+
+`https://docs.moodle.org/19/en/How_to_enable_web_services_for_ordinary_users`
+
+ou suivre le procédé "Autoriser un système externe à contrôler Moodle" disponible à cet endroit de votre moodle : 
+
+`https://votre_moodle/admin/settings.php?section=webservicesoverview`
 
 ## Test
 
