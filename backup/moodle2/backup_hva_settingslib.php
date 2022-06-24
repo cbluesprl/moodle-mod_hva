@@ -23,7 +23,7 @@
 /**
  * Define the complete custommailing structure for backup, with file and id annotations
  */
-class backup_custommailing_activity_structure_step extends backup_activity_structure_step
+class backup_hva_activity_structure_step extends backup_activity_structure_step
 {
 
     protected function define_structure()
@@ -49,14 +49,14 @@ class backup_custommailing_activity_structure_step extends backup_activity_struc
 
         // All the rest of elements only happen if we are including user info
         if ($userinfo) {
-            $hva_tracking->set_source_table('hva_tracking', ['hva_tracking' => '../../id']);
+            $hva_tracking->set_source_table('hva_tracking', ['hvaid' => '../../id']);
         }
         // Define id annotations
         $hva_tracking->annotate_ids('user', 'userid');
 
         // Define file annotations
 
-        // Return the root element (choice), wrapped into standard activity structure
+        // Return the root element (hva), wrapped into standard activity structure
         return $this->prepare_activity_structure($hva);
     }
 }
