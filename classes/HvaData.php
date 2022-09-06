@@ -39,7 +39,6 @@ class HvaData
     private $user;
     private $LMSTracking;
     private $hyperfictionTracking;
-    //private $zipfile;
 
     /**
      * HyperfictionData constructor.
@@ -148,13 +147,13 @@ class HvaData
         // then manage the json file
         // if the file exist, we delete it
         $file = $this->get_tracking_file($this->hva->cmid, $o->id);
-        if (is_a($file, stored_file::class)) {
+        if (is_a($file, \stored_file::class)) {
             $file->delete();
         }
 
         $fs = get_file_storage();
         $fileinfo = [
-            'contextid' => context_module::instance($this->hva->cmid)->id,
+            'contextid' => \context_module::instance($this->hva->cmid)->id,
             'component' => 'mod_hva',
             'filearea' => 'hva_tracking',
             'itemid' => $o->id,
@@ -176,7 +175,7 @@ class HvaData
      */
     public function output()
     {
-        $output = new stdClass();
+        $output = new \stdClass();
 
         $output->studentId = $this->user->id;
         $output->studentName = $this->user->firstname . ' ' . $this->user->lastname;
@@ -192,7 +191,7 @@ class HvaData
      * Get the tracking informations from the pin code
      *
      * @param $pincode
-     * @return HyperfictionData
+     * @return Hvadata
      * @throws dml_exception
      */
     public static function get_from_pin($pincode)
@@ -207,7 +206,7 @@ class HvaData
      *
      * @param $userid
      * @param $hvaid
-     * @return HyperfictionData
+     * @return HvaData
      * @throws dml_exception
      */
     public static function get_from_userid_and_hvaid($userid, $hvaid)
@@ -229,13 +228,13 @@ class HvaData
      *
      * @param $user
      * @param $hva
-     * @return HyperfictionData
+     * @return HvaData
      * @throws dml_exception
      */
     public static function get_from_user_and_hva($user, $hva)
     {
         global $DB;
-        $object = new stdClass();
+        $object = new \stdClass();
         $object->user = $user;
         $object->hva = $hva;
         $tracking = $DB->get_record(self::$table, ['userid' => $object->user->id, 'hvaid' => $object->hva->id]);
@@ -243,7 +242,7 @@ class HvaData
             $tracking->score = empty($tracking->score) ? 0 : $tracking->score;
             $tracking->completion = empty($tracking->status) ? 0 : $tracking->status;
         } else {
-            $tracking = new stdClass();
+            $tracking = new \stdClass();
             $tracking->score = 0;
             $tracking->completion = 0;
             $tracking->id = null;
@@ -311,11 +310,11 @@ class HvaData
     private function get_tracking_file($cmid, $fileid)
     {
         if (empty($fileid) || $fileid == false) {
-            return new stdClass();
+            return new \stdClass();
         }
 
         global $DB;
-        $context = context_module::instance($cmid);
+        $context = \context_module::instance($cmid);
         $file_params = [
             'contextid' => $context->id,
             'component' => 'mod_hva',
@@ -352,7 +351,7 @@ class HvaData
         global $DB;
 
         $fs = get_file_storage();
-        $context = context_module::instance($cmid);
+        $context = \context_module::instance($cmid);
         $file_info = $DB->get_record_sql(
             "SELECT *
             FROM {files}

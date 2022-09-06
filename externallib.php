@@ -14,6 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+use mod_hva\Zipfile;
+use mod_hva\HvaData;
+use mod_hva\PinHva;
+
 /**
  * @package     mod_hva
  * @author      Loïc Hannecart <lhannecart@cblue.be>
@@ -56,9 +60,6 @@ class mod_hva_external extends external_api
     {
         global $CFG;
         require_once __DIR__ . '/../../config.php';
-        require_once $CFG->dirroot . '/mod/hva/classes/PinHva.php';
-        require_once $CFG->dirroot . '/mod/hva/classes/HvaData.php';
-        require_once $CFG->dirroot . '/mod/hva/classes/Zipfile.php';
 
         $params = self::validate_parameters(self::get_info_parameters(), ['pincode' => $pincode]);
 
@@ -122,9 +123,6 @@ class mod_hva_external extends external_api
     {
         global $CFG;
         require_once __DIR__ . '/../../config.php';
-        require_once $CFG->dirroot . '/mod/hva/classes/PinHva.php';
-        require_once $CFG->dirroot . '/mod/hva/classes/HvaData.php';
-
 
         $params = self::validate_parameters(self::save_data_parameters(), ['pincode' => $pincode, 'LMSTracking' => $LMSTracking, 'hyperfictionTracking' => $hyperfictionTracking]);
         $message = new stdClass();

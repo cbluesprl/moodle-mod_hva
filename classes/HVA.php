@@ -141,7 +141,7 @@ class HVA
         global $DB;
 
         $fs = get_file_storage();
-        $context = context_module::instance($cmid);
+        $context = \context_module::instance($cmid);
         $file_info = $DB->get_record_sql(
             "SELECT *
             FROM {files}
