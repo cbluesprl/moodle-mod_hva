@@ -20,6 +20,9 @@
  * @copyright   2022 CBlue (https://www.cblue.be/)
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+namespace mod_hva;
+
 class HVA
 {
     public static $table = 'hva';
@@ -151,30 +154,4 @@ class HVA
             return null;
         }
     }
-
-
-    /**
-     * @param $cmid
-     * @return bool|stored_file|null
-     * @throws dml_exception
-     */
-    /*    private function get_zipfile_from_cmid($cmid)
-        {
-            global $DB;
-
-            $fs = get_file_storage();
-            $context = context_module::instance($cmid);
-            $file_info = $DB->get_record_sql(
-                "SELECT *
-                FROM {files}
-                WHERE contextid = :contextid AND component = 'mod_hva' AND itemid = '1' AND filepath = '/' AND filename != '.'",
-                ['contextid' => $context->id]
-            );
-            if ($file_info !== false) {
-                return $fs->get_file($context->id, 'mod_hva', 'zipfile', 0, '/', $file_info->filename);
-            } else {
-                return null;
-            }
-        }*/
-
 }

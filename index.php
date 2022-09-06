@@ -22,12 +22,32 @@
  */
 
 require_once('../../config.php');
+
+global $CFG, $DB, $PAGE, $OUTPUT;
+
 require_once $CFG->dirroot . '/local/hva/form.php';
 
 $id = required_param('id', PARAM_INT);           // Course ID
 
 // Ensure that the course specified is valid
-if (!$course = $DB->get_record('course', ['id' => $id])) {
-    print_error('Course ID is incorrect');
+$id = required_param('id', PARAM_INT);
+
+if (!empty($id)) {
+    if (!$course = $DB->get_record('course', ['id' => $id])) {
+        print_error('invalidcourseid');
+    }
+} else {
+    print_error('missingparameter');
 }
 
+require_course_login($course);
+
+$PAGE->set_url('/mod/hva/index.php', ['id' => $id]);
+$PAGE->set_pagelayout('incourse');
+
+// Print the header.
+$PAGE->set_title(format_string(get_string('modulename', 'hva')));
+$PAGE->set_heading(format_string($course->fullname));
+echo $OUTPUT->header();
+
+echo $OUTPUT->footer();

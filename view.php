@@ -21,10 +21,11 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use mod_hva\PinHva;
+
 require_once __DIR__ . '/../../config.php';
 require_once $CFG->libdir . '/completionlib.php';
 require_once $CFG->dirroot . '/mod/hva/lib.php';
-require_once $CFG->dirroot . '/mod/hva/classes/PinHva.php';
 
 global $USER, $COURSE;
 
@@ -55,7 +56,7 @@ $PAGE->requires->css('/mod/hva/style.css');
 echo $OUTPUT->header();
 
 if (has_capability('mod/hva:test',$context)) {
-    echo html_writer::start_tag('button', ['class' => 'btn btn-link','id' => 'btn_test']);
+    echo html_writer::start_tag('button', ['class' => 'btn btn-link','id' => 'btn_test_hva']);
     echo html_writer::tag('a', get_string('pagetest', 'hva'), ['href' => '/mod/hva/test/index.php']);
     echo html_writer::end_tag('button');
 }

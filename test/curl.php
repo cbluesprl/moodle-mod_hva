@@ -27,7 +27,7 @@
  * @param $token
  * @return mixed|string
  */
-function curl_get_info($pincode, $token)
+function mod_hva_curl_get_info($pincode, $token)
 {
     global $CFG;
     $curl = new curl();
@@ -64,7 +64,7 @@ function curl_get_info($pincode, $token)
  * @param $token
  * @return mixed|string
  */
-function curl_save_data($pincode, $score, $completion, $hyperfictionTracking, $token)
+function mod_hva_curl_save_data($pincode, $score, $completion, $hyperfictionTracking, $token)
 {
     global $CFG;
 

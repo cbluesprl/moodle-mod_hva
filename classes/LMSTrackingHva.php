@@ -20,6 +20,8 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_hva;
+
 require_once __DIR__ . '/../../../config.php';
 global $CFG;
 require_once $CFG->libdir . '/completionlib.php';

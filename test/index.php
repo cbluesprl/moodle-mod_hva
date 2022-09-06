@@ -26,7 +26,7 @@ require_once __DIR__ . '/../../../config.php';
 
 global $CFG, $DB, $OUTPUT, $PAGE;
 
-require_once $CFG->dirroot . '/mod/hva/curl.php';
+require_once $CFG->dirroot . '/mod/hva/test/curl.php';
 require_once $CFG->dirroot . '/mod/hva/test/form.php';
 
 $resp = '';
@@ -49,7 +49,7 @@ if ($form->is_cancelled()) {
 } elseif ($data = $form->get_data()) {
     if (isset($data->web_service)) {
         if ($data->web_service === 'get_info') {
-            [$resp,$resp_json] = curl_get_info($data->pincode, $data->token);
+            [$resp,$resp_json] = mod_hva_curl_get_info($data->pincode, $data->token);
             if ($resp === 'invalidrecord') {
                 echo html_writer::tag('div', get_string('invalidpincode', 'mod_hva'), ['class' => 'alert alert-danger']);
             } else if ($resp === 'invalidtoken') {
@@ -73,7 +73,7 @@ if ($form->is_cancelled()) {
             }
         }
         if ($data->web_service === 'save_data') {
-            $resp = curl_save_data($data->pincode, $data->score, $data->completion, $data->hyperfictionTracking, $data->token);
+            $resp = mod_hva_curl_save_data($data->pincode, $data->score, $data->completion, $data->hyperfictionTracking, $data->token);
 
             if ($resp === 'invalidrecord') {
                 echo html_writer::tag('div', get_string('invalidpincode', 'mod_hva'), ['class' => 'alert alert-danger']);

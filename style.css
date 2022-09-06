@@ -1,11 +1,11 @@
-#btn_test {
+.path-mod-hva #btn_test_hva {
     display: flex;
     width: 100%;
     flex-direction: row-reverse;
     margin-bottom: 20px;
 }
 
-#btn_test a {
+.path-mod-hva #btn_test_hva a {
     padding: 8px;
     border: 2px solid #00a984;
     border-radius: 20px;

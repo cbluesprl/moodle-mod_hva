@@ -32,7 +32,7 @@ class mod_hva_mod_form extends moodleform_mod
 {
     function definition()
     {
-        global $CFG, $DB, $OUTPUT;
+        global $CFG;
 
         $mform =& $this->_form;
 

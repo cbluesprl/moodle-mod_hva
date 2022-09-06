@@ -21,6 +21,8 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_hva;
+
 require_once __DIR__ . '/../../../config.php';
 require_once $CFG->dirroot . '/mod/hva/classes/HVA.php';
 
@@ -150,7 +152,7 @@ class PinHva
             }
         }
 
-        $o = new stdClass();
+        $o = new \stdClass();
         $o->pincode = $pincode;
         $o->hvaid = $hvaid;
         $o->userid = $userid;
