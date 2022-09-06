@@ -109,8 +109,8 @@ class HvaData
         $o->score = $tracking->score;
         $o->timemodified = time();
 
-        $cm = $DB->get_record_sql("SELECT * FROM mdl_course_modules WHERE instance = {$this->hva->id} AND module = (SELECT id FROM mdl_modules WHERE name LIKE 'hva')");
-        $course = $DB->get_record_sql("SELECT * FROM mdl_course WHERE id = $cm->course");
+        $cm = $DB->get_record_sql("SELECT * FROM {course_modules} WHERE instance = {$this->hva->id} AND module = (SELECT id FROM {modules} WHERE name LIKE 'hva')");
+        $course = $DB->get_record_sql("SELECT * FROM {course} WHERE id = $cm->course");
 
         if ($this->id === null) { // if id is null, that means that no tracking is currently stored in the database
             $o->timecreated = $o->timemodified;
@@ -182,8 +182,6 @@ class HvaData
         $output->LMSTracking = $this->LMSTracking;
         $output->hyperfictionInitialize = $this->hva->metadata;
         $output->hyperfictionTracking = $this->hyperfictionTracking;
-        //$output->zipfile = $this->zipfile;
-
 
         return $output;
     }

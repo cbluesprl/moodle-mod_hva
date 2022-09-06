@@ -95,11 +95,11 @@ class HVA
 
         $instance = $DB->get_record_sql(
             "SELECT a.id
-            FROM mdl_course_modules cm_s
-            JOIN mdl_scorm s ON s.id = cm_s.instance
-            JOIN mdl_course_modules cm_a ON cm_a.course = cm_s.course AND cm_a.module = (SELECT id FROM mdl_modules WHERE name = 'hva')
-            JOIN mdl_hva a ON a.id = cm_a.instance
-            WHERE cm_s.id = $cmid AND cm_a.deletioninprogress = 0 AND cm_s.module = (SELECT id FROM mdl_modules WHERE name = 'scorm')",
+            FROM {course_modules} cm_s
+            JOIN {scorm} s ON s.id = cm_s.instance
+            JOIN {course_modules} cm_a ON cm_a.course = cm_s.course AND cm_a.module = (SELECT id FROM {modules} WHERE name = 'hva')
+            JOIN {hva} a ON a.id = cm_a.instance
+            WHERE cm_s.id = $cmid AND cm_a.deletioninprogress = 0 AND cm_s.module = (SELECT id FROM {modules} WHERE name = 'scorm')",
             null,
             MUST_EXIST
         );
@@ -118,9 +118,9 @@ class HVA
 
         $r = $DB->get_record_sql(
             "SELECT cm.id as cmid
-            FROM mdl_course_modules cm
-            JOIN mdl_modules m ON m.id = cm.module AND m.name = 'hva'
-            JOIN mdl_hva a ON a.id = cm.instance
+            FROM {course_modules} cm
+            JOIN {modules} m ON m.id = cm.module AND m.name = 'hva'
+            JOIN {hva} a ON a.id = cm.instance
             WHERE a.id = :hvaid",
             ['hvaid' => $hvaid]
         );
