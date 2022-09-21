@@ -56,3 +56,13 @@ $string['tokennotset'] = 'Warning! It is necessary to parameterize the token by 
 $string['url'] = 'Url : ';
 $string['webservice'] = 'Webservice';
 $string['zipfile'] = 'Zip file';
+
+$string['privacy:metadata:mod_hva_subs'] = 'Information about the data to individual hva activity. This includes when a user has a score and a status of a VR activity.';
+$string['privacy:metadata:mod_hva_subs:userid'] = 'The user\'s ID with the results of their VR activity.';
+$string['privacy:metadata:mod_hva_subs:hvaid'] = 'The ID of the hva that was subscribed to.';
+$string['privacy:metadata:mod_hva_subs:status'] = 'Tha status of completion of the VR activity';
+$string['privacy:metadata:mod_hva_subs:score'] = 'The score of the VR activity';
+$string['privacy:metadata:mod_hva_api'] = 'In order to integrate with a remote API service, user data needs to be exchanged with that service';
+$string['privacy:metadata:mod_hva_api:userid'] = 'The userid is sent from Moodle to allow you to participate to the VR activity';
+$string['privacy:metadata:mod_hva_api:score'] = 'Transfer the user\'s score for the VR activity';
+$string['privacy:metadata:mod_hva_api:status'] = 'Transfer the status\'s score for the VR activity';
