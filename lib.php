@@ -31,7 +31,7 @@
  * @throws moodle_exception
  * @throws require_login_exception
  */
-function mod_hva_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = [])
+function hva_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = [])
 {
     // Check the contextlevel is as expected - if your plugin is a block, this becomes CONTEXT_BLOCK, etc.
     if ($context->contextlevel != CONTEXT_MODULE) {
@@ -81,7 +81,7 @@ function mod_hva_pluginfile($course, $cm, $context, $filearea, $args, $forcedown
  * @return bool|int
  * @throws dml_exception
  */
-function mod_hva_add_instance($data)
+function hva_add_instance($data)
 {
     global $DB;
 
@@ -124,7 +124,7 @@ function mod_hva_add_instance($data)
  * @return bool
  * @throws dml_exception
  */
-function mod_hva_update_instance($data)
+function hva_update_instance($data)
 {
     global $DB;
 
@@ -176,7 +176,7 @@ function mod_hva_update_instance($data)
  * @return bool
  * @throws dml_exception
  */
-function mod_hva_delete_instance($id)
+function hva_delete_instance($id)
 {
     global $DB;
 
@@ -199,7 +199,7 @@ function mod_hva_delete_instance($id)
  * @return mixed
  * @throws Exception
  */
-function mod_hva_get_instance($id)
+function hva_get_instance($id)
 {
     global $DB;
     try {
@@ -209,7 +209,7 @@ function mod_hva_get_instance($id)
     }
 }
 
-function mod_hva_supports($feature) {
+function hva_supports($feature) {
     switch($feature) {
         case FEATURE_GROUPS:                  return false;
         case FEATURE_GROUPINGS:               return false;
