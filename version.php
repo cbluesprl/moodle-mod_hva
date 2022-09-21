@@ -27,4 +27,4 @@ $plugin->component = 'mod_hva';
 $plugin->version = 2022062400;
 $plugin->requires = 2018120306.12;
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = 'v1.0.0';
+$plugin->release = 'v1.1.0';
