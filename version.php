@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_hva';
-$plugin->version = 2022062400;
+$plugin->version = 2022092100;
 $plugin->requires = 2018120306.12;
 $plugin->maturity = MATURITY_STABLE;
 $plugin->release = 'v1.1.0';
