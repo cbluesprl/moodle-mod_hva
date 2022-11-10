@@ -19,3 +19,44 @@
  * @copyright   2022 CBlue (https://www.cblue.be/)
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+/**
+ * Define the complete custommailing structure for backup, with file and id annotations
+ */
+class backup_hva_activity_structure_step extends backup_activity_structure_step
+{
+
+    protected function define_structure()
+    {
+        // To know if we are including userinfo
+        $userinfo = $this->get_setting_value('userinfo');
+
+        // Define each element separated
+        $hva = new backup_nested_element('hva', ['id'], [
+            'course', 'name', 'intro', 'introformat', 'timecreated', 'timemodified']);
+
+        $hva_trackings = new backup_nested_element('hva_trackings');
+
+        $hva_tracking = new backup_nested_element('hva_tracking', ['id'], [
+            'hvaid', 'userid', 'status', 'score', 'timecreated', 'timemodified']);
+
+        // Build the tree
+        $hva->add_child($hva_trackings);
+        $hva_trackings->add_child($hva_tracking);
+
+        // Define sources
+        $hva->set_source_table('hva', ['id' => backup::VAR_ACTIVITYID]);
+
+        // All the rest of elements only happen if we are including user info
+        if ($userinfo) {
+            $hva_tracking->set_source_table('hva_tracking', ['hvaid' => '../../id']);
+        }
+        // Define id annotations
+        $hva_tracking->annotate_ids('user', 'userid');
+
+        // Define file annotations
+
+        // Return the root element (hva), wrapped into standard activity structure
+        return $this->prepare_activity_structure($hva);
+    }
+}
