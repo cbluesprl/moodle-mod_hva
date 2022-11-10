@@ -23,21 +23,16 @@
 
 require_once('../../config.php');
 
+defined('MOODLE_INTERNAL') || die();
+
 global $CFG, $DB, $PAGE, $OUTPUT;
 
-require_once $CFG->dirroot . '/local/hva/form.php';
-
-$id = required_param('id', PARAM_INT);           // Course ID
-
-// Ensure that the course specified is valid
+// Course ID
 $id = required_param('id', PARAM_INT);
 
-if (!empty($id)) {
-    if (!$course = $DB->get_record('course', ['id' => $id])) {
-        print_error('invalidcourseid');
-    }
-} else {
-    print_error('missingparameter');
+// Ensure that the course specified is valid
+if (!$course = $DB->get_record('course', array('id'=> $id))) {
+    print_error('Course ID is incorrect');
 }
 
 require_course_login($course);
@@ -48,6 +43,28 @@ $PAGE->set_pagelayout('incourse');
 // Print the header.
 $PAGE->set_title(format_string(get_string('modulename', 'hva')));
 $PAGE->set_heading(format_string($course->fullname));
-echo $OUTPUT->header();
 
+$hva_instances = get_coursemodules_in_course('hva', $course->id);
+
+$table = new html_table();
+$table->head = [
+    'name',
+    'section',
+    'status 1',
+    'status 2',
+    'status 3',
+    'status 4',
+];
+$table->align = ['center', 'center'];
+$table->data = [];
+
+foreach ($hva_instances as $id => $hva_instance) {
+    $table->data[] = new html_table_row(array(
+        new html_table_cell($hva_instance->name),
+        new html_table_cell($hva_instance->section),
+    ));
+}
+
+echo $OUTPUT->header();
+echo html_writer::table($table);
 echo $OUTPUT->footer();
