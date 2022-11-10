@@ -96,16 +96,17 @@ class HVA
     {
         global $DB;
 
-        $instance = $DB->get_record_sql(
-            "SELECT a.id
+        $sql = "
+            SELECT a.id
             FROM {course_modules} cm_s
             JOIN {scorm} s ON s.id = cm_s.instance
             JOIN {course_modules} cm_a ON cm_a.course = cm_s.course AND cm_a.module = (SELECT id FROM {modules} WHERE name = 'hva')
             JOIN {hva} a ON a.id = cm_a.instance
-            WHERE cm_s.id = $cmid AND cm_a.deletioninprogress = 0 AND cm_s.module = (SELECT id FROM {modules} WHERE name = 'scorm')",
-            null,
-            MUST_EXIST
-        );
+            WHERE cm_s.id = :cmid AND cm_a.deletioninprogress = 0 AND cm_s.module = (SELECT id FROM {modules} WHERE name = 'scorm')
+        ";
+
+        $params = ['cmid' => $cmid];
+        $instance = $DB->get_record_sql($sql, $params, MUST_EXIST);
 
         return self::get($instance->id);
     }
