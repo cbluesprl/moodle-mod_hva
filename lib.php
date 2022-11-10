@@ -187,7 +187,9 @@ function hva_delete_instance($id)
     // note: all context files are deleted automatically
 
     $DB->delete_records('hva', ['id' => $id]);
-    $DB->delete_records('hva_pincode', ['hva' => $id]);
+    if ($DB->count_records('hva_pincode',['hvaid' => $id]) > 0) {
+        $DB->delete_records('hva_pincode', ['hvaid' => $id]);
+    }
 
     grade_update('mod/hva', $hva->course, 'mod', 'hva', $id, 0, null, ['deleted' => 1]);
 
