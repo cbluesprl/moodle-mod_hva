@@ -22,6 +22,8 @@
 
 namespace mod_hva;
 
+use coding_exception;
+use Exception;
 use stdClass;
 
 require_once __DIR__ . '/../../../config.php';

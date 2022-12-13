@@ -41,7 +41,6 @@ function mod_hva_curl_get_info($pincode, $token)
         if (isset($resp->errorcode)) {
             return [$resp->errorcode, false];
         }
-        var_dump($resp);die;
         if ($resp->LMSTracking->completion == 0 || $resp->LMSTracking->completion == 1) {
             $resp->LMSTracking->completion == 0 ? $resp->LMSTracking->completion = get_string('incompleted', 'mod_hva') : $resp->LMSTracking->completion = get_string('completed', 'mod_hva');
         } else {
@@ -91,7 +90,6 @@ function mod_hva_curl_save_data($pincode, $score, $completion, $hyperfictionTrac
     $resp = json_decode($curl->post($url, $params));
 
     if (!empty($resp)) {
-        var_dump($resp);die;
         if (isset($resp->errorcode)) {
             return $resp->errorcode;
         } else if ($resp->status != "save succeeded") {
