@@ -88,7 +88,6 @@ function mod_hva_curl_save_data($pincode, $score, $completion, $hyperfictionTrac
     $params = format_postdata_for_curlcall($params);
 
     $resp = json_decode($curl->post($url, $params));
-
     if (!empty($resp)) {
         if (isset($resp->errorcode)) {
             return $resp->errorcode;

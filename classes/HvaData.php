@@ -117,8 +117,8 @@ class HvaData
         $o->score = $tracking->score;
         $o->timemodified = time();
 
-        $cm = $DB->get_record_sql("SELECT * FROM {course_modules} WHERE instance = {$this->hva->id} AND module = (SELECT id FROM {modules} WHERE name LIKE 'hva')");
-        $course = $DB->get_record_sql("SELECT * FROM {course} WHERE id = $cm->course");
+        $cm = $DB->get_record_sql("SELECT * FROM {course_modules} WHERE instance = :instance AND module = (SELECT id FROM {modules} WHERE name LIKE 'hva')" , ['instance' => $this->hva->id]);
+        $course = $DB->get_record_sql("SELECT * FROM {course} WHERE id = :courseid", ['courseid' => $cm->course]);
 
         if ($this->id === null) { // if id is null, that means that no tracking is currently stored in the database
             $o->timecreated = $o->timemodified;
