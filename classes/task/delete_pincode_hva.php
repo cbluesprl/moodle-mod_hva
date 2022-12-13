@@ -26,6 +26,7 @@ namespace mod_hva\task;
 
 use coding_exception;
 use core\task\scheduled_task;
+use DateTime;
 use dml_exception;
 
 require_once __DIR__ . '/../../../../config.php';
@@ -54,6 +55,7 @@ class delete_pincode_hva extends scheduled_task
     {
         global $DB;
 
-        return $DB->execute("DELETE FROM {hva_pincode} WHERE timemodified < UNIX_TIMESTAMP(NOW() - INTERVAL 120 MINUTE)");
+        $two_hour_before = (new DateTime())->sub(new \DateInterval('PT2H'))->getTimestamp();
+        return $DB->execute("DELETE FROM {hva_pincode} WHERE timemodified < $two_hour_before");
     }
 }
