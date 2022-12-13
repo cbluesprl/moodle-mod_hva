@@ -23,6 +23,10 @@
 
 namespace mod_hva;
 
+use coding_exception;
+use Exception;
+use stdClass;
+
 require_once __DIR__ . '/../../../config.php';
 require_once $CFG->dirroot . '/mod/hva/classes/HVA.php';
 
@@ -71,7 +75,7 @@ class PinHva
 
     /**
      * @param $pin
-     * @return Pin
+     * @return PinHva
      * @throws dml_exception
      */
     public static function get_from_pin($pin)
@@ -152,7 +156,7 @@ class PinHva
             }
         }
 
-        $o = new \stdClass();
+        $o = new stdClass();
         $o->pincode = $pincode;
         $o->hvaid = $hvaid;
         $o->userid = $userid;

@@ -22,6 +22,8 @@
 
 namespace mod_hva;
 
+use stdClass;
+
 require_once __DIR__ . '/../../../config.php';
 global $CFG;
 require_once $CFG->libdir . '/completionlib.php';

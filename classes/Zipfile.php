@@ -23,6 +23,10 @@
 
 namespace mod_hva;
 
+use context_module;
+use moodle_url;
+use stdClass;
+
 require_once __DIR__ . '/../../../config.php';
 global $CFG;
 require_once $CFG->dirroot . '/mod/hva/classes/PinHva.php';
@@ -33,7 +37,7 @@ class Zipfile
      * return url for download the zipfile
      *
      * @param $cmid
-     * @return string
+     * @return string | stdClass
      * @throws dml_exception
      */
     static function get_zipfile_from_pincode($hvaData)
@@ -41,7 +45,6 @@ class Zipfile
         global $DB;
 
         $cmid = HVA::get_cmid_from_hvaid($hvaData->hva->id);
-        $object = new stdClass();
         $fs = get_file_storage();
         $context = context_module::instance($cmid);
 
