@@ -48,20 +48,24 @@ $hva_instances = get_coursemodules_in_course('hva', $course->id);
 
 $table = new html_table();
 $table->head = [
-    'name',
-    'section',
-    'status 1',
-    'status 2',
-    'status 3',
-    'status 4',
+    get_string('name'),
+    get_string('section'),
+    get_string('description'),
+    get_string('visible'),
 ];
+
 $table->align = ['center', 'center'];
 $table->data = [];
 
 foreach ($hva_instances as $id => $hva_instance) {
+    $hva = $DB->get_record('hva',['id' => $hva_instance->instance],'intro');
+    $visible = $hva_instance->visible === '1' ? get_string('visible') : get_string('hidden');
+
     $table->data[] = new html_table_row(array(
         new html_table_cell($hva_instance->name),
         new html_table_cell($hva_instance->section),
+        new html_table_cell($hva->intro),
+        new html_table_cell($visible),
     ));
 }
 
