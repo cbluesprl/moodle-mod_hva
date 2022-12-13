@@ -56,6 +56,6 @@ class delete_pincode_hva extends scheduled_task
         global $DB;
 
         $two_hour_before = (new DateTime())->sub(new \DateInterval('PT2H'))->getTimestamp();
-        return $DB->execute("DELETE FROM {hva_pincode} WHERE timemodified < $two_hour_before");
+        return $DB->execute("DELETE FROM {hva_pincode} WHERE timemodified < :two_hour_before", ['two_hour_before' => $two_hour_before]);
     }
 }
